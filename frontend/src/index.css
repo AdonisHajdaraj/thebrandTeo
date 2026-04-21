@@ -1,0 +1,33 @@
+/* Global responsive improvements for mobile */
+@media (max-width: 320px) {
+  * {
+    font-size: 14px;
+  }
+
+  .container, .nav-container, .products-container, .customize-container {
+    padding-left: 1rem;
+    padding-right: 1rem;
+  }
+
+  h1 {
+    font-size: 1.8rem;
+  }
+
+  h2 {
+    font-size: 1.5rem;
+  }
+
+  h3 {
+    font-size: 1.2rem;
+  }
+
+  button {
+    min-height: 44px;
+    padding: 12px 16px;
+  }
+
+  input, textarea, select {
+    min-height: 44px;
+    font-size: 16px; /* Prevents zoom on iOS */
+  }
+}

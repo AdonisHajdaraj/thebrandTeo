@@ -1,0 +1,567 @@
+/* Preview.css */
+.preview-page {
+  background: linear-gradient(135deg, #0a0a0a 0%, #050505 100%);
+  min-height: 100vh;
+  color: #f5f5f5;
+}
+
+.preview-container {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 2rem;
+}
+
+/* Header */
+.preview-header {
+  text-align: center;
+  margin-bottom: 3rem;
+}
+
+.back-btn {
+  background: transparent;
+  border: none;
+  color: #a0a0a0;
+  cursor: pointer;
+  margin-bottom: 1rem;
+  transition: color 0.3s;
+}
+
+.back-btn:hover {
+  color: #d4a574;
+}
+
+.preview-header h1 {
+  font-size: 2.5rem;
+  font-weight: 500;
+  margin-bottom: 0.5rem;
+}
+
+.preview-header p {
+  color: #a0a0a0;
+}
+
+/* Main Preview */
+.preview-main {
+  display: grid;
+  grid-template-columns: 1fr 400px;
+  gap: 2rem;
+}
+
+/* Dress Preview Area */
+.dress-preview {
+  background: rgba(255, 255, 255, 0.03);
+  border-radius: 16px;
+  padding: 2rem;
+  position: relative;
+}
+
+.view-controls {
+  display: flex;
+  gap: 1rem;
+  margin-bottom: 2rem;
+  justify-content: center;
+}
+
+.view-btn {
+  background: transparent;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  color: #f5f5f5;
+  padding: 0.5rem 1rem;
+  border-radius: 30px;
+  cursor: pointer;
+  transition: all 0.3s;
+}
+
+.view-btn:hover,
+.view-btn.active {
+  background: #d4a574;
+  border-color: #d4a574;
+  color: #0a0a0a;
+}
+
+.zoom-controls {
+  position: absolute;
+  top: 2rem;
+  right: 2rem;
+  display: flex;
+  gap: 0.5rem;
+}
+
+.zoom-controls button {
+  width: 40px;
+  height: 40px;
+  background: rgba(255, 255, 255, 0.1);
+  border: none;
+  color: #f5f5f5;
+  border-radius: 50%;
+  cursor: pointer;
+  transition: all 0.3s;
+}
+
+.zoom-controls button:hover {
+  background: #d4a574;
+  color: #0a0a0a;
+}
+
+/* Dress Visualization */
+.dress-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  transition: transform 0.3s;
+  min-height: 500px;
+}
+
+.dress-silhouette {
+  position: relative;
+  width: 300px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.dress-body {
+  position: relative;
+  width: 200px;
+  border-radius: 100px 100px 20px 20px;
+  transition: all 0.3s;
+  position: relative;
+  overflow: hidden;
+}
+
+/* Neckline Styles */
+.neckline {
+  position: absolute;
+  top: -15px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 100px;
+  height: 60px;
+  background: #0a0a0a;
+}
+
+/* Sleeves */
+.sleeve {
+  position: absolute;
+  top: 10%;
+  width: 30%;
+  height: 30%;
+  background: inherit;
+  border-radius: 40%;
+  transition: all 0.3s;
+}
+
+/* Embroidery Patterns */
+.embroidery-pattern {
+  position: absolute;
+  top: 40%;
+  left: 0;
+  right: 0;
+  text-align: center;
+}
+
+.floral-pattern {
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+  font-size: 1.5rem;
+  animation: sparkle 2s infinite;
+}
+
+.intricate-pattern {
+  position: relative;
+  height: 100px;
+}
+
+.pattern-line {
+  position: absolute;
+  left: 50%;
+  width: 2px;
+  height: 80px;
+  background: rgba(212, 165, 116, 0.6);
+  transform: translateX(-50%);
+}
+
+.pattern-line:nth-child(2) {
+  transform: translateX(-50%) rotate(45deg);
+}
+
+.pattern-dot {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 1.5rem;
+  color: #d4a574;
+}
+
+.beaded-pattern {
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+  font-size: 1.2rem;
+  animation: shine 1s infinite;
+}
+
+.monogram {
+  font-size: 1.2rem;
+  letter-spacing: 2px;
+  color: #d4a574;
+  font-weight: 600;
+}
+
+/* Fabric Texture */
+.fabric-texture {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  pointer-events: none;
+}
+
+/* Hemline */
+.hemline {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: linear-gradient(90deg, transparent, #d4a574, transparent);
+}
+
+/* Stand */
+.stand {
+  width: 80px;
+  height: 20px;
+  background: linear-gradient(90deg, #666, #999, #666);
+  border-radius: 4px;
+  margin-top: 1rem;
+}
+
+/* Reflection */
+.reflection {
+  width: 250px;
+  height: 50px;
+  background: linear-gradient(180deg, rgba(255,255,255,0.1), transparent);
+  border-radius: 50%;
+  margin-top: 1rem;
+  filter: blur(5px);
+}
+
+/* Animations */
+@keyframes sparkle {
+  0%, 100% { opacity: 0.6; }
+  50% { opacity: 1; }
+}
+
+@keyframes shine {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.2); }
+}
+
+/* Different Views */
+.dress-silhouette.side .dress-body {
+  transform: perspective(500px) rotateY(20deg);
+}
+
+.dress-silhouette.back .dress-body {
+  transform: rotateY(180deg);
+}
+
+/* Quality Badges */
+.quality-badges {
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+  margin-top: 2rem;
+}
+
+.badge {
+  padding: 0.3rem 0.8rem;
+  background: rgba(212, 165, 116, 0.1);
+  border: 1px solid rgba(212, 165, 116, 0.3);
+  border-radius: 20px;
+  font-size: 0.7rem;
+}
+
+/* Specifications Panel */
+.specifications-panel {
+  background: rgba(255, 255, 255, 0.03);
+  border-radius: 16px;
+  padding: 1.5rem;
+}
+
+.specifications-panel h3,
+.price-breakdown h4,
+.fabric-swatch h4,
+.delivery-timeline h4 {
+  margin-bottom: 1rem;
+  color: #d4a574;
+  font-size: 1rem;
+}
+
+.spec-group {
+  margin-bottom: 1.5rem;
+}
+
+.spec-item {
+  display: flex;
+  justify-content: space-between;
+  padding: 0.5rem 0;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.spec-label {
+  color: #a0a0a0;
+  font-size: 0.85rem;
+}
+
+.spec-value {
+  font-weight: 500;
+}
+
+/* Price Breakdown */
+.price-breakdown {
+  margin-bottom: 1.5rem;
+  padding-bottom: 1.5rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.price-row {
+  display: flex;
+  justify-content: space-between;
+  padding: 0.3rem 0;
+  font-size: 0.85rem;
+  color: #a0a0a0;
+}
+
+.price-total {
+  display: flex;
+  justify-content: space-between;
+  padding: 0.8rem 0;
+  font-size: 1.1rem;
+  font-weight: 600;
+  border-top: 2px solid #d4a574;
+  margin-top: 0.5rem;
+}
+
+/* Fabric Swatch */
+.fabric-swatch {
+  margin-bottom: 1.5rem;
+}
+
+.swatch-container {
+  display: flex;
+  gap: 1rem;
+  align-items: center;
+}
+
+.swatch {
+  width: 60px;
+  height: 60px;
+  border-radius: 8px;
+  border: 2px solid rgba(255, 255, 255, 0.2);
+}
+
+.swatch-info p {
+  margin: 0;
+  font-size: 0.8rem;
+}
+
+.fabric-feel {
+  color: #a0a0a0;
+  font-size: 0.7rem;
+  margin-top: 0.2rem;
+}
+
+/* Delivery Timeline */
+.delivery-timeline {
+  margin-bottom: 1.5rem;
+}
+
+.timeline-bar {
+  height: 4px;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 2px;
+  margin-bottom: 1rem;
+  overflow: hidden;
+}
+
+.timeline-progress {
+  height: 100%;
+  background: #d4a574;
+  border-radius: 2px;
+  animation: progress 2s ease-out;
+}
+
+@keyframes progress {
+  from { width: 0; }
+  to { width: 25%; }
+}
+
+.timeline-steps {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 1rem;
+}
+
+.timeline-steps .step {
+  text-align: center;
+  font-size: 1.2rem;
+}
+
+.timeline-steps .step small {
+  display: block;
+  font-size: 0.6rem;
+  color: #a0a0a0;
+  margin-top: 0.3rem;
+}
+
+.delivery-estimate {
+  text-align: center;
+  color: #d4a574;
+  font-size: 0.8rem;
+  margin-top: 0.5rem;
+}
+
+/* Action Buttons */
+.preview-actions {
+  display: flex;
+  gap: 1rem;
+  margin-top: 1.5rem;
+}
+
+.preview-actions button {
+  flex: 1;
+  padding: 0.8rem;
+}
+
+/* Recommendations */
+.recommendations {
+  margin-top: 3rem;
+  padding-top: 2rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.recommendations h3 {
+  margin-bottom: 1.5rem;
+  font-size: 1.2rem;
+}
+
+.rec-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1rem;
+}
+
+.rec-card {
+  background: rgba(255, 255, 255, 0.03);
+  border-radius: 8px;
+  padding: 1rem;
+  text-align: center;
+  transition: transform 0.3s;
+  cursor: pointer;
+}
+
+.rec-card:hover {
+  transform: translateY(-5px);
+  background: rgba(255, 255, 255, 0.05);
+}
+
+.rec-card img {
+  width: 100%;
+  height: 120px;
+  object-fit: cover;
+  border-radius: 4px;
+  margin-bottom: 0.5rem;
+}
+
+.rec-card p {
+  font-size: 0.8rem;
+  margin-bottom: 0.2rem;
+}
+
+.rec-card span {
+  color: #d4a574;
+  font-size: 0.8rem;
+  font-weight: 600;
+}
+
+/* Loader */
+.preview-loader {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 400px;
+}
+
+.loader {
+  width: 60px;
+  height: 60px;
+  border: 3px solid rgba(212, 165, 116, 0.2);
+  border-top-color: #d4a574;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+  margin-bottom: 1rem;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+/* Responsive */
+@media (max-width: 1024px) {
+  .preview-main {
+    grid-template-columns: 1fr;
+  }
+  
+  .dress-preview {
+    order: 2;
+  }
+  
+  .specifications-panel {
+    order: 1;
+  }
+}
+
+@media (max-width: 768px) {
+  .preview-container {
+    padding: 1rem;
+  }
+  
+  .preview-header h1 {
+    font-size: 1.8rem;
+  }
+  
+  .dress-silhouette {
+    width: 250px;
+  }
+  
+  .dress-body {
+    width: 160px;
+  }
+  
+  .rec-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .timeline-steps .step small {
+    display: none;
+  }
+  
+  .preview-actions {
+    flex-direction: column;
+  }
+}
+
+@media (max-width: 480px) {
+  .view-controls {
+    flex-wrap: wrap;
+  }
+  
+  .quality-badges {
+    flex-wrap: wrap;
+  }
+}
