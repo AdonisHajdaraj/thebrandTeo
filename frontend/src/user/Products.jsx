@@ -1,7 +1,6 @@
-﻿// Products.jsx - Version Modern & Minimal - I RREGULLUAR PLOTËSISHT
+﻿// Products.jsx - Me fetch direkt që funksionon me proxy
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { supabase } from '../supabase';
 import './style/Products.css';
 import Sidebar from './Sidebar';
 import { useCart } from './CartContext';
@@ -16,49 +15,59 @@ const Products = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  // Fetch products from database
+  // Fetch products me fetch direkt
   useEffect(() => {
     const fetchProducts = async () => {
       setLoading(true);
       setError(null);
       
       try {
-        console.log('🔄 Duke u lidhur me Supabase...');
-        console.log('📍 URL:', import.meta.env.PROD ? '/api/supabase' : import.meta.env.VITE_SUPABASE_URL);
+        const isProd = import.meta.env.PROD;
+        const anonKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
         
-        const { data, error } = await supabase
-          .from('products')
-          .select('*')
-          .order('created_at', { ascending: false });
-
-        if (error) {
-          console.error('❌ Gabim nga Supabase:', error);
-          setError(error.message);
-          return;
-        }
-
-        console.log('✅ Produkte të marra:', data?.length || 0);
+        // Në production, përdor proxy-n; në development, përdor direkt
+        const baseUrl = isProd 
+          ? ''  // Proxy relativ (i njëjti origin)
+          : import.meta.env.VITE_SUPABASE_URL;
         
-        if (!data || data.length === 0) {
-          console.warn('⚠️ Nuk u gjet asnjë produkt në databazë!');
+        const url = isProd
+          ? `/api/supabase/products?select=*&order=created_at.desc`
+          : `${baseUrl}/rest/v1/products?select=*&order=created_at.desc`;
+        
+        console.log('🔄 Fetching from:', url);
+        
+        const response = await fetch(url, {
+          method: 'GET',
+          headers: {
+            'apikey': anonKey,
+            'Authorization': `Bearer ${anonKey}`,
+            'Content-Type': 'application/json',
+            'Accept': 'application/json'
+          }
+        });
+        
+        if (!response.ok) {
+          throw new Error(`HTTP ${response.status}: ${response.statusText}`);
         }
-
-        // Transformo të dhënat për t'u përputhur me strukturën e pritur
+        
+        const data = await response.json();
+        console.log('✅ Products loaded:', data.length);
+        
         const transformedProducts = (data || []).map(product => ({
           ...product,
           inStock: product.in_stock === true,
           originalPrice: product.original_price
         }));
-
+        
         setProducts(transformedProducts);
       } catch (err) {
-        console.error('❌ Gabim gjatë fetch:', err);
+        console.error('❌ Error fetching products:', err);
         setError(err.message);
       } finally {
         setLoading(false);
       }
     };
-
+    
     fetchProducts();
   }, []);
 
@@ -75,7 +84,6 @@ const Products = () => {
     return true;
   });
 
-  // Krijoni një kopje për sortim
   const sortedProducts = [...filteredProducts];
 
   if (sortBy === 'price-asc') {
@@ -203,7 +211,6 @@ const Products = () => {
           ) : (
             <div className="products-grid-modern">
               {sortedProducts.map((product, index) => {
-                // Kontrollo nëse produkti është në stok
                 const isInStock = product.in_stock === true || product.inStock === true;
                 
                 return (
@@ -216,7 +223,7 @@ const Products = () => {
                       {product.image ? (
                         <img src={product.image} alt={product.name} />
                       ) : (
-                        <div className="no-image">📸 Pa foto</div>
+                        <div className="no-image">📸</div>
                       )}
                       {product.badge && (
                         <span className={`product-badge-modern ${product.badge.toLowerCase().replace(' ', '-')}`}>
@@ -252,9 +259,6 @@ const Products = () => {
                         <span className="current-price">€{product.price}</span>
                         {product.original_price && (
                           <span className="original-price">€{product.original_price}</span>
-                        )}
-                        {product.originalPrice && !product.original_price && (
-                          <span className="original-price">€{product.originalPrice}</span>
                         )}
                       </div>
 
