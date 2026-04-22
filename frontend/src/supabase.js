@@ -1,20 +1,18 @@
 // src/supabase.js
 import { createClient } from '@supabase/supabase-js'
 
-// Kontrollo nëse jemi në production (Vercel) apo development (lokal)
-const isProd = import.meta.env.PROD
-
-const supabaseUrl = isProd 
-  ? '/api/supabase'  // Në Vercel, përdor proxy-n
-  : import.meta.env.VITE_SUPABASE_URL  // Lokalisht, përdor direkt
-
+// Merr URL-në nga environment variables
+const supabaseUrl = import.meta.env.VITE_SUPABASE_URL
 const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY
 
-console.log('Supabase URL:', supabaseUrl) // Për debugging
+// Kontrollo nëse ekzistojnë
+if (!supabaseUrl) {
+  console.error('❌ VITE_SUPABASE_URL mungon!')
+}
 
-export const supabase = createClient(supabaseUrl, supabaseAnonKey, {
-  auth: {
-    persistSession: true,
-    autoRefreshToken: true,
-  }
-})
+if (!supabaseAnonKey) {
+  console.error('❌ VITE_SUPABASE_ANON_KEY mungon!')
+}
+
+// Krijo client-in
+export const supabase = createClient(supabaseUrl, supabaseAnonKey)
