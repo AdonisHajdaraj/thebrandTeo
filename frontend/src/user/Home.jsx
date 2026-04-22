@@ -1,4 +1,4 @@
-// Home.jsx
+// Home.jsx - Me Sekret Admin Access (Kliko 5 herë në logo)
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import './style/Home.css';
@@ -10,6 +10,36 @@ const Home = () => {
   const [activeFilter, setActiveFilter] = useState('all');
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
+  
+  // Sekret Admin Access - Kliko 5 herë në logo për të shkuar te admini
+  const [clickCount, setClickCount] = useState(0);
+  const [showAdminHint, setShowAdminHint] = useState(false);
+
+  const handleSecretClick = () => {
+    setClickCount(prev => {
+      const newCount = prev + 1;
+      
+      // Shfaq hint pas klikimit të parë
+      if (newCount === 1) {
+        setShowAdminHint(true);
+      }
+      
+      // Nëse arrin 5 klikime, shko te admini
+      if (newCount >= 5) {
+        setShowAdminHint(false);
+        navigate('/admin/login');
+        return 0;
+      }
+      
+      // Reset pas 3 sekondash pa klikime
+      setTimeout(() => {
+        setClickCount(0);
+        setShowAdminHint(false);
+      }, 3000);
+      
+      return newCount;
+    });
+  };
 
   useEffect(() => {
     const handleScroll = () => {
@@ -37,10 +67,30 @@ const Home = () => {
   return (
     <div className="app">
       <Sidebar />
+      
+      {/* Admin Hint - Shfaqet kur klikon logon */}
+      {showAdminHint && (
+        <div style={{
+          position: 'fixed',
+          bottom: '20px',
+          left: '50%',
+          transform: 'translateX(-50%)',
+          background: 'rgba(0,0,0,0.8)',
+          color: 'white',
+          padding: '12px 24px',
+          borderRadius: '40px',
+          zIndex: 9999,
+          fontSize: '14px',
+          backdropFilter: 'blur(8px)',
+          animation: 'fadeInUp 0.3s ease',
+          boxShadow: '0 10px 30px rgba(0,0,0,0.2)'
+        }}>
+          Kliko edhe {5 - clickCount} herë për të hyrë në panelin e administrimit
+        </div>
+      )}
+      
       {/* Custom Cursor */}
       <div className="custom-cursor"></div>
-      
-    
 
       {/* Hero Section - Modern Split Layout */}
       <section id="home" className="hero">
@@ -89,106 +139,125 @@ const Home = () => {
         </div>
       </section>
 
-   {/* Collection Showcase - Vitrinë Ekskluzive */}
-<section id="collection" className="collection-showcase">
-  <div className="showcase-header">
-    <div className="showcase-label">
-      <span className="label-dot"></span>
-      <span>Koleksioni AW24</span>
-    </div>
-    <h2 className="showcase-title">
-      <span className="title-word">Elegancë</span>
-      <span className="title-word italic">Pa Kohë</span>
-    </h2>
-    <p className="showcase-subtitle">
-      Zbulo modelet tona ikonike të punuara me dorë nga mjeshtrit tanë
-    </p>
-  </div>
-
-  <div className="showcase-masonry">
-    {/* Fustani 1 - Dominant */}
-    <div className="showcase-item item-large">
-      <div className="showcase-image-wrapper">
-        <img 
-          src="https://images.unsplash.com/photo-1595777457583-95e059d581b8?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80" 
-          alt="Silk Symphony"
-        />
-        <div className="image-mask"></div>
-        <div className="showcase-badge">
-          <span>Bestseller</span>
+      {/* Collection Showcase - Vitrinë Ekskluzive */}
+      <section id="collection" className="collection-showcase">
+        <div className="showcase-header">
+          <div className="showcase-label">
+            <span className="label-dot"></span>
+            <span>Koleksioni AW24</span>
+          </div>
+          <h2 className="showcase-title">
+            <span className="title-word">Elegancë</span>
+            <span className="title-word italic">Pa Kohë</span>
+          </h2>
+          <p className="showcase-subtitle">
+            Zbulo modelet tona ikonike të punuara me dorë nga mjeshtrit tanë
+          </p>
         </div>
-      </div>
-      <div className="showcase-content">
-        <div className="content-inner">
-          <span className="category-tag">Evening Collection</span>
-          <h3>Silk Symphony</h3>
-          <div className="price-wrapper">
-            <span className="discover-link">
-              Zbulo <span className="arrow">→</span>
-            </span>
+
+        <div className="showcase-masonry">
+          {/* Fustani 1 - Dominant */}
+          <div className="showcase-item item-large">
+            <div className="showcase-image-wrapper">
+              <img 
+                src="https://images.unsplash.com/photo-1595777457583-95e059d581b8?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" 
+                alt="Silk Symphony"
+              />
+              <div className="image-mask"></div>
+              <div className="showcase-badge">
+                <span>Bestseller</span>
+              </div>
+            </div>
+            <div className="showcase-content">
+              <div className="content-inner">
+                <span className="category-tag">Evening Collection</span>
+                <h3>Silk Symphony</h3>
+                <span 
+                  className="discover-link"
+                  onClick={() => navigate('/products')}
+                >
+                  Zbulo <span className="arrow">→</span>
+                </span>
+              </div>
+            </div>
+          </div>
+
+          {/* Fustani 2 - Medium */}
+          <div className="showcase-item item-medium">
+            <div className="showcase-image-wrapper shape-organic">
+              <img 
+                src="https://images.unsplash.com/photo-1515372039744-b8f02a3ae446?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80" 
+                alt="Garden Rose"
+              />
+              <div className="image-mask"></div>
+              <div className="showcase-badge new">
+                <span>New</span>
+              </div>
+            </div>
+            <div className="showcase-content">
+              <span className="category-tag">Daywear</span>
+              <h3>Garden Rose</h3>
+              <span 
+                className="discover-link"
+                onClick={() => navigate('/products')}
+              >
+                Zbulo <span className="arrow">→</span>
+              </span>
+            </div>
+          </div>
+
+          {/* Fustani 3 - Medium */}
+          <div className="showcase-item item-medium">
+            <div className="showcase-image-wrapper shape-circle">
+              <img 
+                src="https://images.unsplash.com/photo-1539008835657-9e8e9680c956?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80" 
+                alt="Golden Hour"
+              />
+              <div className="image-mask"></div>
+              <div className="showcase-badge limited">
+                <span>Limited</span>
+              </div>
+            </div>
+            <div className="showcase-content">
+              <span className="category-tag">Evening</span>
+              <h3>Golden Hour</h3>
+              <span 
+                className="discover-link"
+                onClick={() => navigate('/products')}
+              >
+                Zbulo <span className="arrow">→</span>
+              </span>
+            </div>
+          </div>
+
+          {/* Fustani 4 - Small */}
+          <div className="showcase-item item-small">
+            <div className="showcase-image-wrapper shape-blob">
+              <img 
+                src="https://images.unsplash.com/photo-1496747611176-843222e1e57c?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80" 
+                alt="Noir"
+              />
+              <div className="image-mask"></div>
+            </div>
+            <div className="showcase-content">
+              <h3>Noir</h3>
+              <span 
+                className="discover-link"
+                onClick={() => navigate('/products')}
+              >
+                Zbulo <span className="arrow">→</span>
+              </span>
+            </div>
           </div>
         </div>
-      </div>
-    </div>
 
-    {/* Fustani 2 - Medium */}
-    <div className="showcase-item item-medium">
-      <div className="showcase-image-wrapper shape-organic">
-        <img 
-          src="https://images.unsplash.com/photo-1515372039744-b8f02a3ae446?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80" 
-          alt="Garden Rose"
-        />
-        <div className="image-mask"></div>
-        <div className="showcase-badge new">
-          <span>New</span>
+        <div className="showcase-footer">
+          <button className="btn-view-all" onClick={() => navigate('/products')}>
+            <span>Shiko të gjitha</span>
+            <span className="btn-arrow">→</span>
+          </button>
         </div>
-      </div>
-      <div className="showcase-content">
-        <span className="category-tag">Daywear</span>
-        <h3>Garden Rose</h3>
-      </div>
-    </div>
-
-    {/* Fustani 3 - Medium */}
-    <div className="showcase-item item-medium">
-      <div className="showcase-image-wrapper shape-circle">
-        <img 
-          src="https://images.unsplash.com/photo-1539008835657-9e8e9680c956?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80" 
-          alt="Golden Hour"
-        />
-        <div className="image-mask"></div>
-        <div className="showcase-badge limited">
-          <span>Limited</span>
-        </div>
-      </div>
-      <div className="showcase-content">
-        <span className="category-tag">Evening</span>
-        <h3>Golden Hour</h3>
-      </div>
-    </div>
-
-    {/* Fustani 4 - Small (Aksesor) */}
-    <div className="showcase-item item-small">
-      <div className="showcase-image-wrapper shape-blob">
-        <img 
-          src="https://images.unsplash.com/photo-1496747611176-843222e1e57c?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80" 
-          alt="Noir"
-        />
-        <div className="image-mask"></div>
-      </div>
-      <div className="showcase-content">
-        <h3>Noir</h3>
-      </div>
-    </div>
-  </div>
-
-  <div className="showcase-footer">
-    <button className="btn-view-all">
-      <span>Shiko të gjitha</span>
-      <span className="btn-arrow">→</span>
-    </button>
-  </div>
-</section>
+      </section>
 
       {/* Editorial Section - Full Width Banner */}
       <section id="editorial" className="editorial">
@@ -262,7 +331,13 @@ const Home = () => {
       <footer className="footer">
         <div className="footer-container">
           <div className="footer-brand">
-            <h2>TEO</h2>
+            <h2 
+              onClick={handleSecretClick}
+              style={{ cursor: 'pointer', userSelect: 'none' }}
+              title=""
+            >
+              TEO
+            </h2>
             <p>Where fashion becomes<br/>architecture for the body.</p>
             <div className="social-links">
               <a href="#">IG</a>
@@ -274,10 +349,10 @@ const Home = () => {
           <div className="footer-links">
             <div className="link-group">
               <h4>Shop</h4>
-              <a href="#">Ready to Wear</a>
-              <a href="#">Evenwear</a>
-              <a href="#">Accessories</a>
-              <a href="#">Archive Sale</a>
+              <Link to="/products">Ready to Wear</Link>
+              <Link to="/products">Evenwear</Link>
+              <Link to="/products">Accessories</Link>
+              <Link to="/products">Archive Sale</Link>
             </div>
             <div className="link-group">
               <h4>Studio</h4>
@@ -288,10 +363,10 @@ const Home = () => {
             </div>
             <div className="link-group">
               <h4>Support</h4>
-              <a href="#">Size Guide</a>
-              <a href="#">Shipping</a>
-              <a href="#">Returns</a>
-              <a href="#">Contact</a>
+              <Link to="/contact">Size Guide</Link>
+              <Link to="/contact">Shipping</Link>
+              <Link to="/contact">Returns</Link>
+              <Link to="/contact">Contact</Link>
             </div>
           </div>
         </div>

@@ -1,4 +1,4 @@
-﻿// Products.jsx - Version Modern & Minimal - I RREGULLUAR
+﻿// Products.jsx - Version Modern & Minimal - I RREGULLUAR PLOTËSISHT
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { supabase } from '../supabase';
@@ -14,33 +14,46 @@ const Products = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
   // Fetch products from database
   useEffect(() => {
     const fetchProducts = async () => {
+      setLoading(true);
+      setError(null);
+      
       try {
-        // Hiq filtrin eq('in_stock', true) që të shfaqen të gjitha produktet
+        console.log('🔄 Duke u lidhur me Supabase...');
+        console.log('📍 URL:', import.meta.env.PROD ? '/api/supabase' : import.meta.env.VITE_SUPABASE_URL);
+        
         const { data, error } = await supabase
           .from('products')
           .select('*')
           .order('created_at', { ascending: false });
 
         if (error) {
-          console.error('Error fetching products:', error);
+          console.error('❌ Gabim nga Supabase:', error);
+          setError(error.message);
           return;
         }
 
+        console.log('✅ Produkte të marra:', data?.length || 0);
+        
+        if (!data || data.length === 0) {
+          console.warn('⚠️ Nuk u gjet asnjë produkt në databazë!');
+        }
+
         // Transformo të dhënat për t'u përputhur me strukturën e pritur
-        const transformedProducts = data.map(product => ({
+        const transformedProducts = (data || []).map(product => ({
           ...product,
-          inStock: product.in_stock, // Shto inStock për compatibility
-          originalPrice: product.original_price // Shto originalPrice për compatibility
+          inStock: product.in_stock === true,
+          originalPrice: product.original_price
         }));
 
-        setProducts(transformedProducts || []);
-        console.log('Produktet e ngarkuara:', transformedProducts); // Për debugging
+        setProducts(transformedProducts);
       } catch (err) {
-        console.error('Error:', err);
+        console.error('❌ Gabim gjatë fetch:', err);
+        setError(err.message);
       } finally {
         setLoading(false);
       }
@@ -100,6 +113,20 @@ const Products = () => {
         <div className="loading-container">
           <div className="loading-spinner"></div>
           <p>Po ngarkohen produktet...</p>
+        </div>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="products-page">
+        <Sidebar />
+        <div className="error-container">
+          <span className="error-icon">⚠️</span>
+          <h3>Gabim në ngarkim</h3>
+          <p>{error}</p>
+          <button onClick={() => window.location.reload()}>Rifresko faqen</button>
         </div>
       </div>
     );
@@ -189,7 +216,7 @@ const Products = () => {
                       {product.image ? (
                         <img src={product.image} alt={product.name} />
                       ) : (
-                        <div className="no-image">📸</div>
+                        <div className="no-image">📸 Pa foto</div>
                       )}
                       {product.badge && (
                         <span className={`product-badge-modern ${product.badge.toLowerCase().replace(' ', '-')}`}>
