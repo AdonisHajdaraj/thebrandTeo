@@ -15,62 +15,56 @@ const Products = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  // Fetch products me fetch direkt
-  useEffect(() => {
-    const fetchProducts = async () => {
-      setLoading(true);
-      setError(null);
-      
-      try {
-        const isProd = import.meta.env.PROD;
-        const anonKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
-        
-        // Në production, përdor proxy-n; në development, përdor direkt
-        const baseUrl = isProd 
-          ? ''  // Proxy relativ (i njëjti origin)
-          : import.meta.env.VITE_SUPABASE_URL;
-        
-        const url = isProd
-          ? `/api/supabase/products?select=*&order=created_at.desc`
-          : `${baseUrl}/rest/v1/products?select=*&order=created_at.desc`;
-        
-        console.log('🔄 Fetching from:', url);
-        
-        const response = await fetch(url, {
-          method: 'GET',
-          headers: {
-            'apikey': anonKey,
-            'Authorization': `Bearer ${anonKey}`,
-            'Content-Type': 'application/json',
-            'Accept': 'application/json'
-          }
-        });
-        
-        if (!response.ok) {
-          throw new Error(`HTTP ${response.status}: ${response.statusText}`);
-        }
-        
-        const data = await response.json();
-        console.log('✅ Products loaded:', data.length);
-        
-        const transformedProducts = (data || []).map(product => ({
-          ...product,
-          inStock: product.in_stock === true,
-          originalPrice: product.original_price
-        }));
-        
-        setProducts(transformedProducts);
-      } catch (err) {
-        console.error('❌ Error fetching products:', err);
-        setError(err.message);
-      } finally {
-        setLoading(false);
-      }
-    };
+  // Products.jsx - Pjesa e useEffect
+useEffect(() => {
+  const fetchProducts = async () => {
+    setLoading(true);
+    setError(null);
     
-    fetchProducts();
-  }, []);
-
+    try {
+      const isProd = import.meta.env.PROD;
+      
+      // Në production, përdor API route; në development, përdor direkt
+      const url = isProd
+        ? '/api/products'
+        : `${import.meta.env.VITE_SUPABASE_URL}/rest/v1/products?select=*&order=created_at.desc`;
+      
+      const headers = isProd
+        ? { 'Content-Type': 'application/json' }
+        : {
+            'apikey': import.meta.env.VITE_SUPABASE_ANON_KEY,
+            'Authorization': `Bearer ${import.meta.env.VITE_SUPABASE_ANON_KEY}`,
+            'Content-Type': 'application/json'
+          };
+      
+      console.log('🔄 Fetching from:', url);
+      
+      const response = await fetch(url, { headers });
+      
+      if (!response.ok) {
+        throw new Error(`HTTP ${response.status}`);
+      }
+      
+      const data = await response.json();
+      console.log('✅ Products loaded:', data.length);
+      
+      const transformed = data.map(p => ({
+        ...p,
+        inStock: p.in_stock === true,
+        originalPrice: p.original_price
+      }));
+      
+      setProducts(transformed);
+    } catch (err) {
+      console.error('❌ Error:', err);
+      setError(err.message);
+    } finally {
+      setLoading(false);
+    }
+  };
+  
+  fetchProducts();
+}, []);
   const categories = [
     { id: 'all', label: 'Të gjitha' },
     { id: 'Dasme', label: 'Dasma' },
