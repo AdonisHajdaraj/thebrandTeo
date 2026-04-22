@@ -16,6 +16,7 @@ const Products = () => {
   const [error, setError] = useState(null);
 
   // Products.jsx - Pjesa e useEffect
+// Products.jsx - Në useEffect
 useEffect(() => {
   const fetchProducts = async () => {
     setLoading(true);
@@ -24,29 +25,29 @@ useEffect(() => {
     try {
       const isProd = import.meta.env.PROD;
       
-      // Në production, përdor API route; në development, përdor direkt
+      // Përdor URL-në tënde REALE
       const url = isProd
         ? '/api/products'
-        : `${import.meta.env.VITE_SUPABASE_URL}/rest/v1/products?select=*&order=created_at.desc`;
+        : 'https://jscyzysifxtsrhvsapao.supabase.co/rest/v1/products?select=*&order=created_at.desc';
       
-      const headers = isProd
-        ? { 'Content-Type': 'application/json' }
-        : {
-            'apikey': import.meta.env.VITE_SUPABASE_ANON_KEY,
-            'Authorization': `Bearer ${import.meta.env.VITE_SUPABASE_ANON_KEY}`,
-            'Content-Type': 'application/json'
-          };
+      const anonKey = 'sb_publishable_nuYKr0Oa32fwnHNO_U13kQ_bt1CMh6f';
       
       console.log('🔄 Fetching from:', url);
       
-      const response = await fetch(url, { headers });
+      const response = await fetch(url, {
+        headers: {
+          'apikey': anonKey,
+          'Authorization': `Bearer ${anonKey}`,
+          'Content-Type': 'application/json'
+        }
+      });
       
       if (!response.ok) {
         throw new Error(`HTTP ${response.status}`);
       }
       
       const data = await response.json();
-      console.log('✅ Products loaded:', data.length);
+      console.log('✅ Products:', data.length);
       
       const transformed = data.map(p => ({
         ...p,
@@ -65,6 +66,9 @@ useEffect(() => {
   
   fetchProducts();
 }, []);
+      
+    
+
   const categories = [
     { id: 'all', label: 'Të gjitha' },
     { id: 'Dasme', label: 'Dasma' },
