@@ -1,4 +1,4 @@
-// Home.jsx - Me Sekret Admin Access (Kliko 5 herë në logo)
+// Home.jsx - Me më shumë përmbajtje dhe tekst
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import './style/Home.css';
@@ -7,375 +7,317 @@ import './style/Sidebar.css';
 
 const Home = () => {
   const navigate = useNavigate();
-  const [activeFilter, setActiveFilter] = useState('all');
-  const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const [scrolled, setScrolled] = useState(false);
-  
-  // Sekret Admin Access - Kliko 5 herë në logo për të shkuar te admini
   const [clickCount, setClickCount] = useState(0);
   const [showAdminHint, setShowAdminHint] = useState(false);
 
   const handleSecretClick = () => {
     setClickCount(prev => {
       const newCount = prev + 1;
-      
-      // Shfaq hint pas klikimit të parë
-      if (newCount === 1) {
-        setShowAdminHint(true);
-      }
-      
-      // Nëse arrin 5 klikime, shko te admini
+      if (newCount === 1) setShowAdminHint(true);
       if (newCount >= 5) {
         setShowAdminHint(false);
         navigate('/admin/login');
         return 0;
       }
-      
-      // Reset pas 3 sekondash pa klikime
-      setTimeout(() => {
-        setClickCount(0);
-        setShowAdminHint(false);
-      }, 3000);
-      
+      setTimeout(() => { setClickCount(0); setShowAdminHint(false); }, 3000);
       return newCount;
     });
   };
 
-  useEffect(() => {
-    const handleScroll = () => {
-      setScrolled(window.scrollY > 50);
-    };
-    window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
-  }, []);
-
-  const products = [
-    { id: 1, name: 'Silk Symphony', price: '€189', category: 'evening', image: 'https://images.unsplash.com/photo-1566174053879-31528523f8ae?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80', badge: 'New' },
-    { id: 2, name: 'Midnight Muse', price: '€159', category: 'evening', image: 'https://images.unsplash.com/photo-1595777457583-95e059d581b8?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80', badge: 'Bestseller' },
-    { id: 3, name: 'Garden Rose', price: '€129', category: 'casual', image: 'https://images.unsplash.com/photo-1515372039744-b8f02a3ae446?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80', badge: null },
-    { id: 4, name: 'Golden Hour', price: '€219', category: 'evening', image: 'https://images.unsplash.com/photo-1539008835657-9e8e9680c956?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80', badge: 'Limited' },
-    { id: 5, name: 'Breeze', price: '€99', category: 'casual', image: 'https://images.unsplash.com/photo-1483985988355-763728e1935b?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80', badge: null },
-    { id: 6, name: 'Noir', price: '€249', category: 'evening', image: 'https://images.unsplash.com/photo-1496747611176-843222e1e57c?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80', badge: 'Exclusive' },
-    { id: 7, name: 'Blossom', price: '€109', category: 'casual', image: 'https://images.unsplash.com/photo-1539008835657-9e8e9680c956?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80', badge: null },
-    { id: 8, name: 'Starlight', price: '€199', category: 'evening', image: 'https://images.unsplash.com/photo-1595777457583-95e059d581b8?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80', badge: 'New' }
+  const testimonials = [
+    { text: "Fustani i dasmës ishte më i bukur se çdo gjë që kisha imagjinuar. Faleminderit TEO!", name: "Ana M.", role: "Nuse" },
+    { text: "Cilësi e jashtëzakonshme dhe shërbim i përsosur. E rekomandoj për çdo rast special.", name: "Elena K.", role: "Kliente" },
+    { text: "Personalizimi ishte fantastik. Skuadra kuptoi saktësisht çfarë doja.", name: "Besa L.", role: "Kliente" }
   ];
 
-  const filteredProducts = activeFilter === 'all' 
-    ? products 
-    : products.filter(p => p.category === activeFilter);
+  const values = [
+    { icon: "✧", title: "Artizanat Italian", desc: "Çdo fustan punohet me dorë në atelietë tona në Firence, duke ruajtur traditën e mjeshtërisë italiane." },
+    { icon: "♡", title: "Materiale Premium", desc: "Përdorim vetëm mëndafsh natyral, dantellë franceze dhe pëlhura të certifikuara etike." },
+    { icon: "◆", title: "Eko-Miqësore", desc: "Prodhimi ynë është 100% i qëndrueshëm. Çdo material riciklohet dhe nuk ka mbetje në landfill." },
+    { icon: "❖", title: "Ekskluzive", desc: "Çdo koleksion prodhohet në sasi të limituar për të garantuar unicitetin e çdo veshjeje." }
+  ];
 
   return (
     <div className="app">
       <Sidebar />
       
-      {/* Admin Hint - Shfaqet kur klikon logon */}
       {showAdminHint && (
-        <div style={{
-          position: 'fixed',
-          bottom: '20px',
-          left: '50%',
-          transform: 'translateX(-50%)',
-          background: 'rgba(0,0,0,0.8)',
-          color: 'white',
-          padding: '12px 24px',
-          borderRadius: '40px',
-          zIndex: 9999,
-          fontSize: '14px',
-          backdropFilter: 'blur(8px)',
-          animation: 'fadeInUp 0.3s ease',
-          boxShadow: '0 10px 30px rgba(0,0,0,0.2)'
-        }}>
-          Kliko edhe {5 - clickCount} herë për të hyrë në panelin e administrimit
+        <div className="admin-hint">
+          Kliko edhe {5 - clickCount} herë për admin
         </div>
       )}
-      
-      {/* Custom Cursor */}
-      <div className="custom-cursor"></div>
 
-      {/* Hero Section - Modern Split Layout */}
-      <section id="home" className="hero">
-        <div className="hero-grid">
-          <div className="hero-content">
-            <div className="hero-tag">
-              <span className="tag-dot"></span>
-              AW24 Collection
-            </div>
-            <h1 className="hero-title">
-              <span className="title-line">Sculpting</span>
-              <span className="title-line">Silhouettes</span>
-            </h1>
-            <p className="hero-desc">
-              Where minimalism meets sensuality. Each piece is a canvas of 
-              architectural precision and poetic movement.
-            </p>
-            <div className="hero-buttons">
-              <button className="btn-primary" onClick={() => navigate('/products')}>Discover Collection →</button>
-              <button className="btn-outline" onClick={() => navigate('/products')}>Shop Now</button>
-            </div>
-            <div className="hero-stats">
-              <div className="stat">
-                <span className="stat-number">15+</span>
-                <span className="stat-label">Years of Excellence</span>
-              </div>
-              <div className="stat">
-                <span className="stat-number">50+</span>
-                <span className="stat-label">Global Awards</span>
-              </div>
-            </div>
+      {/* === HERO === */}
+      <section id="home" className="hero-v2">
+        <div className="hero-v2-bg">
+          <img 
+            src="https://images.unsplash.com/photo-1539008835657-9e8e9680c956?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80" 
+            alt="TEO Fashion" 
+          />
+          <div className="hero-v2-overlay"></div>
+        </div>
+        
+        <div className="hero-v2-content">
+          <div className="hero-v2-tag">
+            <span className="tag-line"></span>
+            <span>Koleksioni 2025</span>
           </div>
-          <div className="hero-visual">
-            <div className="hero-image-container">
-              <img src="https://images.unsplash.com/photo-1539008835657-9e8e9680c956?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80" alt="Teo Fashion" />
-              <div className="image-overlay"></div>
-            </div>
-            <div className="floating-card">
-              <div className="card-content">
-                <span className="card-label">New Arrival</span>
-                <h4>Silk Symphony</h4>
-                <p>Handcrafted in Italy</p>
-              </div>
-            </div>
+          <h1 className="hero-v2-title">
+            Elegancë<br/>
+            <span className="hero-v2-accent">Pa Kohë</span>
+          </h1>
+          <p className="hero-v2-desc">
+            Çdo fustan është një kryevepër e krijuar me pasion në zemër të Italisë, 
+            duke sjellë elegancën klasike në gardërobën tuaj.
+          </p>
+          <div className="hero-v2-buttons">
+            <button className="btn-hero-primary" onClick={() => navigate('/products')}>
+              Eksploro Koleksionin
+            </button>
+            <button className="btn-hero-outline" onClick={() => navigate('/customize')}>
+              Personalizo Fustanin Tënd
+            </button>
           </div>
         </div>
       </section>
 
-      {/* Collection Showcase - Vitrinë Ekskluzive */}
-      <section id="collection" className="collection-showcase">
-        <div className="showcase-header">
-          <div className="showcase-label">
-            <span className="label-dot"></span>
-            <span>Koleksioni AW24</span>
-          </div>
-          <h2 className="showcase-title">
-            <span className="title-word">Elegancë</span>
-            <span className="title-word italic">Pa Kohë</span>
-          </h2>
-          <p className="showcase-subtitle">
-            Zbulo modelet tona ikonike të punuara me dorë nga mjeshtrit tanë
+      {/* === ABOUT BRAND === */}
+      <section className="about-brand">
+        <div className="about-brand-content">
+          <span className="section-tag">Rreth nesh</span>
+          <h2>Një histori pasioni dhe elegance</h2>
+          <p className="about-brand-text">
+            TEO lindi në vitin 2020 nga vizioni i Elena Teodorës, një dizajnere e diplomuar në 
+            Institutin Marangoni të Milanos. Pas një dekade përvoje në shtëpitë më prestigjioze 
+            të modës në Paris dhe Milano, Elena vendosi të krijojë një markë që kombinon 
+            minimalizmin arkitekturor me sensualitetin e detajeve të punuara me dorë.
           </p>
-        </div>
-
-        <div className="showcase-masonry">
-          {/* Fustani 1 - Dominant */}
-          <div className="showcase-item item-large">
-            <div className="showcase-image-wrapper">
-              <img 
-                src="https://images.unsplash.com/photo-1595777457583-95e059d581b8?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" 
-                alt="Silk Symphony"
-              />
-              <div className="image-mask"></div>
-              <div className="showcase-badge">
-                <span>Bestseller</span>
-              </div>
-            </div>
-            <div className="showcase-content">
-              <div className="content-inner">
-                <span className="category-tag">Evening Collection</span>
-                <h3>Silk Symphony</h3>
-                <span 
-                  className="discover-link"
-                  onClick={() => navigate('/products')}
-                >
-                  Zbulo <span className="arrow">→</span>
-                </span>
-              </div>
-            </div>
-          </div>
-
-          {/* Fustani 2 - Medium */}
-          <div className="showcase-item item-medium">
-            <div className="showcase-image-wrapper shape-organic">
-              <img 
-                src="https://images.unsplash.com/photo-1515372039744-b8f02a3ae446?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80" 
-                alt="Garden Rose"
-              />
-              <div className="image-mask"></div>
-              <div className="showcase-badge new">
-                <span>New</span>
-              </div>
-            </div>
-            <div className="showcase-content">
-              <span className="category-tag">Daywear</span>
-              <h3>Garden Rose</h3>
-              <span 
-                className="discover-link"
-                onClick={() => navigate('/products')}
-              >
-                Zbulo <span className="arrow">→</span>
-              </span>
-            </div>
-          </div>
-
-          {/* Fustani 3 - Medium */}
-          <div className="showcase-item item-medium">
-            <div className="showcase-image-wrapper shape-circle">
-              <img 
-                src="https://images.unsplash.com/photo-1539008835657-9e8e9680c956?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80" 
-                alt="Golden Hour"
-              />
-              <div className="image-mask"></div>
-              <div className="showcase-badge limited">
-                <span>Limited</span>
-              </div>
-            </div>
-            <div className="showcase-content">
-              <span className="category-tag">Evening</span>
-              <h3>Golden Hour</h3>
-              <span 
-                className="discover-link"
-                onClick={() => navigate('/products')}
-              >
-                Zbulo <span className="arrow">→</span>
-              </span>
-            </div>
-          </div>
-
-          {/* Fustani 4 - Small */}
-          <div className="showcase-item item-small">
-            <div className="showcase-image-wrapper shape-blob">
-              <img 
-                src="https://images.unsplash.com/photo-1496747611176-843222e1e57c?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80" 
-                alt="Noir"
-              />
-              <div className="image-mask"></div>
-            </div>
-            <div className="showcase-content">
-              <h3>Noir</h3>
-              <span 
-                className="discover-link"
-                onClick={() => navigate('/products')}
-              >
-                Zbulo <span className="arrow">→</span>
-              </span>
-            </div>
-          </div>
-        </div>
-
-        <div className="showcase-footer">
-          <button className="btn-view-all" onClick={() => navigate('/products')}>
-            <span>Shiko të gjitha</span>
-            <span className="btn-arrow">→</span>
+          <p className="about-brand-text">
+            Sot, TEO është një destinacion për gratë që kërkojnë më shumë se një fustan — 
+            kërkojnë një përvojë, një histori, një pjesë të artit të veshshëm.
+          </p>
+          <button className="btn-outline-dark" onClick={() => navigate('/about')}>
+            Lexo historinë tonë të plotë →
           </button>
         </div>
       </section>
 
-      {/* Editorial Section - Full Width Banner */}
-      <section id="editorial" className="editorial">
-        <div className="editorial-container">
-          <div className="editorial-text">
-            <span className="editorial-label">Editorial</span>
-            <h2>The Art of<br/>Draping</h2>
-            <p>Exploring the intersection of traditional craftsmanship and contemporary design through the lens of our latest collection.</p>
-            <button className="btn-text">Read the story →</button>
+      {/* === VALUES === */}
+      <section className="values-section">
+        <div className="section-header">
+          <span className="section-tag">Filozofia jonë</span>
+          <h2>Çfarë na bën unikë</h2>
+          <p className="section-subtitle">
+            Katër shtyllat mbi të cilat ndërtojmë çdo krijim
+          </p>
+        </div>
+        <div className="values-grid">
+          {values.map((value, index) => (
+            <div key={index} className="value-card">
+              <div className="value-icon">{value.icon}</div>
+              <h3>{value.title}</h3>
+              <p>{value.desc}</p>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      {/* === CATEGORIES === */}
+      <section className="category-quick">
+        <div className="section-header">
+          <span className="section-tag">Koleksionet tona</span>
+          <h2>Zbuloni sipas rastit</h2>
+        </div>
+        <div className="category-grid">
+          <div className="category-card" onClick={() => navigate('/products')}>
+            <img src="https://images.unsplash.com/photo-1595777457583-95e059d581b8?w=400&q=80" alt="Mbrëmje" />
+            <div className="category-overlay">
+              <div>
+                <h3>Mbrëmje</h3>
+                <p>Elegancë për raste speciale</p>
+              </div>
+              <span>Shiko →</span>
+            </div>
           </div>
-          <div className="editorial-image">
-            <img src="https://images.unsplash.com/photo-1496747611176-843222e1e57c?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80" alt="Editorial" />
+          <div className="category-card" onClick={() => navigate('/products')}>
+            <img src="https://images.unsplash.com/photo-1496747611176-843222e1e57c?w=400&q=80" alt="Dasme" />
+            <div className="category-overlay">
+              <div>
+                <h3>Dasma</h3>
+                <p>Fustani i ëndrrave tuaja</p>
+              </div>
+              <span>Shiko →</span>
+            </div>
+          </div>
+          <div className="category-card" onClick={() => navigate('/products')}>
+            <img src="https://images.unsplash.com/photo-1515372039744-b8f02a3ae446?w=400&q=80" alt="Casual" />
+            <div className="category-overlay">
+              <div>
+                <h3>Casual</h3>
+                <p>Stil i përditshëm</p>
+              </div>
+              <span>Shiko →</span>
+            </div>
           </div>
         </div>
       </section>
 
-      {/* Features Section */}
-      <section className="features">
-        <div className="features-grid">
-          <div className="feature">
-            <div className="feature-icon">✧</div>
-            <h3>Artisanal Craft</h3>
-            <p>Each garment is meticulously crafted by master artisans</p>
-          </div>
-          <div className="feature">
-            <div className="feature-icon">✦</div>
-            <h3>Sustainable Luxury</h3>
-            <p>Ethically sourced materials and responsible production</p>
-          </div>
-          <div className="feature">
-            <div className="feature-icon">♢</div>
-            <h3>Bespoke Service</h3>
-            <p>Personalized fittings and custom alterations</p>
-          </div>
+      {/* === BEST SELLERS === */}
+      <section className="bestsellers">
+        <div className="section-header">
+          <span className="section-tag">Më të preferuarat</span>
+          <h2>Best Sellers</h2>
+          <p className="section-subtitle">Fustanet më të dashura nga klientet tona</p>
+        </div>
+        <div className="bestsellers-grid">
+          {[
+            { name: 'Silk Symphony', price: '€189', image: '1539008835657-9e8e9680c956' },
+            { name: 'Midnight Muse', price: '€159', image: '1595777457583-95e059d581b8' },
+            { name: 'Golden Hour', price: '€299', image: '1496747611176-843222e1e57c' },
+            { name: 'Garden Rose', price: '€129', image: '1515372039744-b8f02a3ae446' }
+          ].map((item, i) => (
+            <div key={i} className="bestseller-card" onClick={() => navigate('/products')}>
+              <div className="bestseller-image">
+                <img 
+                  src={`https://images.unsplash.com/photo-${item.image}?w=400&q=80`} 
+                  alt={item.name} 
+                />
+              </div>
+              <h4>{item.name}</h4>
+              <p>{item.price}</p>
+            </div>
+          ))}
+        </div>
+        <div className="section-footer">
+          <button className="btn-view-all" onClick={() => navigate('/products')}>
+            Shiko të gjitha produktet →
+          </button>
         </div>
       </section>
 
-      {/* Instagram Feed */}
-      <section className="instagram">
-        <div className="instagram-header">
-          <span className="insta-label">@teo_studio</span>
-          <h2>Follow the<br/>Movement</h2>
+      {/* === TESTIMONIALS === */}
+      <section className="testimonials">
+        <div className="section-header">
+          <span className="section-tag">Dëshmi</span>
+          <h2>Çfarë thonë klientet tona</h2>
         </div>
-        <div className="instagram-grid">
-          {[1, 2, 3, 4, 5].map(i => (
-            <div key={i} className="insta-post">
-              <img src={`https://images.unsplash.com/photo-${i === 1 ? '1539008835657-9e8e9680c956' : i === 2 ? '1595777457583-95e059d581b8' : i === 3 ? '1515372039744-b8f02a3ae446' : i === 4 ? '1496747611176-843222e1e57c' : '1483985988355-763728e1935b'}?ixlib=rb-4.0.3&auto=format&fit=crop&w=300&q=80`} alt="Instagram" />
-              <div className="insta-overlay">
-                <span>📷</span>
+        <div className="testimonials-grid">
+          {testimonials.map((item, index) => (
+            <div key={index} className="testimonial-card">
+              <p className="testimonial-text">"{item.text}"</p>
+              <div className="testimonial-author">
+                <strong>{item.name}</strong>
+                <span>{item.role}</span>
               </div>
             </div>
           ))}
         </div>
       </section>
 
-      {/* Newsletter */}
-      <section className="newsletter">
-        <div className="newsletter-container">
-          <div className="newsletter-content">
-            <h2>Become an Insider</h2>
-            <p>Be the first to discover new arrivals, exclusive collaborations, and private events.</p>
-            <form className="newsletter-form">
-              <input type="email" placeholder="Enter your email" />
-              <button type="submit">Subscribe →</button>
-            </form>
+      {/* === EDITORIAL === */}
+      <section className="editorial-v2">
+        <div className="editorial-v2-content">
+          <span className="section-tag">Procesi ynë</span>
+          <h2>Artizanat<br/>Italian</h2>
+          <p>
+            Çdo fustan TEO kalon nëpër duart e të paktën 15 mjeshtërve para se të arrijë tek ju. 
+            Nga prerja e pëlhurës tek qepja e fundit, çdo detaj kontrollohet me kujdes maksimal. 
+            Përdorim vetëm materiale të importuara nga Italia dhe Franca.
+          </p>
+          <div className="editorial-stats">
+            <div className="editorial-stat">
+              <span className="stat-big">40+</span>
+              <span className="stat-small">Orë për çdo fustan</span>
+            </div>
+            <div className="editorial-stat">
+              <span className="stat-big">15+</span>
+              <span className="stat-small">Mjeshtër përfshihen</span>
+            </div>
+            <div className="editorial-stat">
+              <span className="stat-big">100%</span>
+              <span className="stat-small">Materiale italiane</span>
+            </div>
+          </div>
+          <button className="btn-outline-dark" onClick={() => navigate('/about')}>
+            Zbulo më shumë →
+          </button>
+        </div>
+        <div className="editorial-v2-image">
+          <img src="https://images.unsplash.com/photo-1441984904996-e0b6ba687e04?w=600&q=80" alt="Artizanat" />
+        </div>
+      </section>
+
+      {/* === CTA === */}
+      <section className="cta-section">
+        <div className="cta-content">
+          <h2>Gati për të gjetur fustanin e ëndrrave?</h2>
+          <p>Na tregoni vizionin tuaj dhe ne do ta krijojmë posaçërisht për ju</p>
+          <div className="cta-buttons">
+            <button className="btn-hero-primary" onClick={() => navigate('/customize')}>
+              Personalizo tani
+            </button>
+            <button className="btn-hero-outline-dark" onClick={() => navigate('/contact')}>
+              Na kontaktoni
+            </button>
           </div>
         </div>
       </section>
 
-      {/* Footer */}
-      <footer className="footer">
-        <div className="footer-container">
-          <div className="footer-brand">
-            <h2 
-              onClick={handleSecretClick}
-              style={{ cursor: 'pointer', userSelect: 'none' }}
-              title=""
-            >
-              TEO
-            </h2>
-            <p>Where fashion becomes<br/>architecture for the body.</p>
-            <div className="social-links">
-              <a href="#">IG</a>
-              <a href="#">FB</a>
-              <a href="#">TW</a>
-              <a href="#">LI</a>
+      {/* === INSTAGRAM === */}
+      <section className="instagram-mini">
+        <div className="section-header">
+          <span className="section-tag">@teo_studio</span>
+          <h2>Na ndiqni në Instagram</h2>
+          <p className="section-subtitle">Për frymëzim të përditshëm dhe pamje ekskluzive</p>
+        </div>
+        <div className="instagram-mini-grid">
+          {[1,2,3,4].map(i => (
+            <div key={i} className="insta-mini-item">
+              <img src={`https://images.unsplash.com/photo-${i === 1 ? '1539008835657-9e8e9680c956' : i === 2 ? '1595777457583-95e059d581b8' : i === 3 ? '1515372039744-b8f02a3ae446' : '1483985988355-763728e1935b'}?w=300&q=80`} alt="Instagram" />
             </div>
+          ))}
+        </div>
+      </section>
+
+      {/* === NEWSLETTER === */}
+      <section className="newsletter-v2">
+        <h2>Bëhuni pjesë e familjes TEO</h2>
+        <p>Merrni të parët koleksionet e reja, ofertat ekskluzive dhe ftesat për evente private.</p>
+        <form className="newsletter-v2-form" onSubmit={e => e.preventDefault()}>
+          <input type="email" placeholder="Email-i juaj" required />
+          <button type="submit">Regjistrohu →</button>
+        </form>
+        <p className="newsletter-note">* Nuk ndajmë të dhënat tuaja me askënd. Shiko politikën tonë të privatesisë.</p>
+      </section>
+
+      {/* === FOOTER === */}
+      <footer className="footer-v2">
+        <div className="footer-v2-grid">
+          <div className="footer-v2-brand">
+            <h2 onClick={handleSecretClick} style={{cursor:'pointer'}}>TEO</h2>
+            <p>Elegancë e përjetshme për gruan moderne</p>
+            <p className="footer-address">Rruga Ibrahim Rugova 15, Tiranë</p>
+            <p className="footer-contact">+355 69 123 4567 | hello@teostudio.al</p>
           </div>
-          <div className="footer-links">
-            <div className="link-group">
-              <h4>Shop</h4>
-              <Link to="/products">Ready to Wear</Link>
-              <Link to="/products">Evenwear</Link>
-              <Link to="/products">Accessories</Link>
-              <Link to="/products">Archive Sale</Link>
+          <div className="footer-v2-links">
+            <div className="footer-link-group">
+              <h4>Eksploro</h4>
+              <Link to="/products">Koleksioni</Link>
+              <Link to="/customize">Personalizo</Link>
+              <Link to="/about">Rreth nesh</Link>
+              <Link to="/contact">Kontakt</Link>
             </div>
-            <div className="link-group">
-              <h4>Studio</h4>
-              <Link to="/about">About Us</Link>
-              <a href="#">Sustainability</a>
-              <a href="#">Press</a>
-              <a href="#">Careers</a>
-            </div>
-            <div className="link-group">
-              <h4>Support</h4>
+            <div className="footer-link-group">
+              <h4>Informacion</h4>
+              <Link to="/contact">Transporti</Link>
+              <Link to="/contact">Kthimet</Link>
               <Link to="/contact">Size Guide</Link>
-              <Link to="/contact">Shipping</Link>
-              <Link to="/contact">Returns</Link>
-              <Link to="/contact">Contact</Link>
+              <a href="#">Privacy Policy</a>
             </div>
           </div>
         </div>
-        <div className="footer-bottom">
-          <p>© 2024 TEO. All rights reserved.</p>
-          <div className="legal-links">
-            <a href="#">Privacy Policy</a>
-            <a href="#">Terms of Service</a>
-          </div>
+        <div className="footer-v2-bottom">
+          <p>© 2025 TEO Studio. Të gjitha të drejtat e rezervuara.</p>
         </div>
       </footer>
     </div>
