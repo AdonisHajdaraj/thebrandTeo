@@ -1,10 +1,13 @@
 // src/supabase.js
 import { createClient } from '@supabase/supabase-js'
 
-// Zëvendëso me vlerat e tua reale nga Supabase Dashboard
-const supabaseUrl = 'https://jscyzysifxtsrhvsapao.supabase.co'
-const supabaseAnonKey = 'sb_publishable_nuYKr0Oa32fwnHNO_U13kQ_bt1CMh6f'
+// Merr nga environment variables (Vite)
+const supabaseUrl = import.meta.env.VITE_SUPABASE_URL
+const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY
 
-console.log('Supabase initialized with hardcoded URL')
+// Debug (shiko në console në production)
+console.log("SUPABASE URL:", supabaseUrl)
+console.log("SUPABASE KEY:", supabaseAnonKey ? "EXISTS" : "MISSING")
 
+// Krijo client
 export const supabase = createClient(supabaseUrl, supabaseAnonKey)
