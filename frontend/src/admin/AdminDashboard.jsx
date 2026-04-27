@@ -13,7 +13,7 @@ import AdminsManager from './AdminsManager';
 // Import CSS të ndara nga admin/style/
 import './style/admin-base.css';
 import './style/admin-sidebar.css';
-import './style/adminDashboard.css';
+import './style/admin-dashboard.css';
 import './style/admin-products.css';
 import './style/admin-orders.css';
 import './style/admin-messages.css';
