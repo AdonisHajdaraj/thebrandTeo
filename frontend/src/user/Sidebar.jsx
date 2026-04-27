@@ -1,4 +1,4 @@
-// Navbar.jsx
+// Navbar.jsx - Me THE BRAND TEO
 import React, { useState, useEffect } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import '../user/style/Sidebar.css';
@@ -33,13 +33,13 @@ const Navbar = () => {
     <>
       <nav className={`navbar ${scrolled ? 'scrolled' : ''}`}>
         <div className="nav-container">
-          {/* Logo */}
+          {/* Logo - THE BRAND TEO */}
           <div className="nav-logo">
             <Link to="/" onClick={() => setIsMenuOpen(false)}>
-              <div className="logo-icon">👗</div>
-              <div className="logo-text">
-                <span className="logo-brand">TEO</span>
-                <span className="logo-sub">FASHION</span>
+              <div className="logo-icon-brand">
+                <span className="logo-the">THE</span>
+                <span className="logo-brand-name">BRAND</span>
+                <span className="logo-teo">TEO</span>
               </div>
             </Link>
           </div>
@@ -61,15 +61,11 @@ const Navbar = () => {
 
           {/* Right Actions */}
           <div className="nav-actions">
-         
-
             {/* Cart Button with Counter */}
             <button className="action-btn cart-btn" onClick={() => navigate('/cart')}>
               <span>🛒</span>
               {cartCount > 0 && <span className="cart-badge">{cartCount}</span>}
             </button>
-
-          
 
             {/* Mobile Menu Button */}
             <button className="mobile-menu-btn" onClick={() => setIsMenuOpen(!isMenuOpen)}>

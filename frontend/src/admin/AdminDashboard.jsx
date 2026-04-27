@@ -1,6 +1,6 @@
-// admin/AdminDashboard.jsx
+// admin/AdminDashboard.jsx - ME IMPORTET E SAKTA PËR STRUKTURËN TËNDE
 import React, { useState, useEffect } from 'react';
-import { Routes, Route, Navigate } from 'react-router-dom';
+import { Routes, Route, Navigate, useLocation } from 'react-router-dom';
 import { supabase } from '../supabase';
 import AdminSidebar from './AdminSidebar';
 import DashboardHome from './DashboardHome';
@@ -9,10 +9,22 @@ import OrdersManager from './OrdersManager';
 import CustomOrdersManager from './CustomOrdersManager';
 import MessagesManager from './MessagesManager';
 import AdminsManager from './AdminsManager';
-import './style/AdminDashboard.css';
+
+// Import CSS të ndara nga admin/style/
+import './style/admin-base.css';
+import './style/admin-sidebar.css';
+import './style/adminDashboard.css';
+import './style/admin-products.css';
+import './style/admin-orders.css';
+import './style/admin-messages.css';
+import './style/admin-admins.css';
+import './style/admin-modals.css';
+import './style/admin-responsive.css';
 
 const AdminDashboard = () => {
+  const location = useLocation();
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
+  const [mobileSidebarOpen, setMobileSidebarOpen] = useState(false);
   const [currentAdmin, setCurrentAdmin] = useState(null);
   const [stats, setStats] = useState({
     totalOrders: 0,
@@ -35,6 +47,10 @@ const AdminDashboard = () => {
       window.location.href = '/admin/login';
     }
   }, []);
+
+  useEffect(() => {
+    setMobileSidebarOpen(false);
+  }, [location.pathname]);
 
   const fetchStats = async () => {
     try {
@@ -68,23 +84,50 @@ const AdminDashboard = () => {
     }
   }, [currentAdmin]);
 
+  const handleMobileToggle = () => {
+    setMobileSidebarOpen(!mobileSidebarOpen);
+  };
+
+  const handleOverlayClick = () => {
+    setMobileSidebarOpen(false);
+  };
+
+  const handleNavClick = () => {
+    setMobileSidebarOpen(false);
+  };
+
   if (loading) {
     return (
       <div className="admin-loading">
         <div className="loader"></div>
-        <p>Duke u ngarkuar...</p>
+        <p>Duke u ngarkuar paneli i administrimit...</p>
       </div>
     );
   }
 
   return (
     <div className="admin-dashboard">
-      <AdminSidebar
-        collapsed={sidebarCollapsed}
-        setCollapsed={setSidebarCollapsed}
-        stats={stats}
-        currentAdmin={currentAdmin}
-      />
+      <button 
+        className="sidebar-mobile-toggle"
+        onClick={handleMobileToggle}
+        aria-label={mobileSidebarOpen ? 'Mbyll menunë' : 'Hap menunë'}
+      >
+        {mobileSidebarOpen ? '✕' : '☰'}
+      </button>
+
+      {mobileSidebarOpen && (
+        <div className="sidebar-mobile-overlay" onClick={handleOverlayClick} />
+      )}
+
+      <div className={`admin-sidebar ${sidebarCollapsed ? 'collapsed' : ''} ${mobileSidebarOpen ? 'mobile-open' : ''}`}>
+        <AdminSidebar
+          collapsed={sidebarCollapsed}
+          setCollapsed={setSidebarCollapsed}
+          stats={stats}
+          currentAdmin={currentAdmin}
+          onNavClick={handleNavClick}
+        />
+      </div>
 
       <div className={`admin-main ${sidebarCollapsed ? 'expanded' : ''}`}>
         <Routes>

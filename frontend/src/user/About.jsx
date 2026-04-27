@@ -1,9 +1,11 @@
 // About.jsx - Version Modern & Minimal
 import React, { useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import './style/About.css';
 import Sidebar from './Sidebar';
 
 const About = () => {
+  const navigate = useNavigate();
   useEffect(() => {
     const handleScroll = () => {
       const elements = document.querySelectorAll('.fade-in');
@@ -38,7 +40,7 @@ const About = () => {
               <span className="title-sub">Studio</span>
             </h1>
             <p className="about-description">
-              Një shtëpi mode e pavarur e themeluar në zemër të Tiranës. 
+              Një shtëpi mode e pavarur e themeluar në zemër të Prishtines. 
               Ne krijojmë veshje që festojnë individualitetin përmes 
               minimalizmit arkitekturor dhe elegancës së përjetshme.
             </p>
@@ -51,10 +53,7 @@ const About = () => {
                 <span className="number">15+</span>
                 <span className="number-label">Koleksione</span>
               </div>
-              <div className="number-item">
-                <span className="number">3</span>
-                <span className="number-label">Butikë</span>
-              </div>
+           
             </div>
           </div>
           <div className="about-hero-visual fade-in">
@@ -84,7 +83,7 @@ const About = () => {
             <div className="story-grid">
               <div className="story-paragraph">
                 <p>
-                  Çdo koleksion fillon në atelienë tonë në Tiranë, ku ekipi ynë i dizajnerëve 
+                  Çdo koleksion fillon në atelienë tonë në Prishtine, ku ekipi ynë i dizajnerëve 
                   dhe mjeshtërve punojnë dorë për dore për të sjellë në jetë vizionin TEO. 
                   Materialet vijnë nga furnizues të përzgjedhur italianë dhe francezë, 
                   ndërsa çdo detaj qepet me përkushtim maksimal.
@@ -92,7 +91,7 @@ const About = () => {
               </div>
               <div className="story-paragraph">
                 <p>
-                  Nga një butik i vogël në Tiranë, sot TEO është i pranishëm në Milano, 
+                  Nga një butik i vogël në Prishtine, sot TEO është i pranishëm në Milano, 
                   Paris dhe online në mbarë botën. Por filozofia jonë mbetet e pandryshuar: 
                   cilësi pa kompromis, dizajn që sfidon kohën dhe respekt për gruan që 
                   vesh krijimet tona.
@@ -114,7 +113,7 @@ const About = () => {
           </div>
           <div className="ceo-content-col fade-in">
             <span className="ceo-label">Njihuni me</span>
-            <h2 className="ceo-name">Elena Teodora</h2>
+            <h2 className="ceo-name">Aulona  Pirraku </h2>
             <span className="ceo-title">Themeluese & Drejtore Kreative</span>
             <div className="ceo-quote">
               <p>
@@ -124,19 +123,21 @@ const About = () => {
               </p>
             </div>
             <p className="ceo-bio">
-              Elena themeloi TEO në vitin 2020 pas një karriere 10-vjeçare në shtëpitë 
+              Aulona themeloi The Brand TEO në vitin 2023 pas një karriere 10-vjeçare në shtëpitë 
               e mëdha të modës në Milano dhe Paris. E diplomuar në Institutin Marangoni, 
               ajo ka fituar çmimin "Talenti i Ri i Vitit" në 2021 dhe është përfshirë 
               në listën "30 nën 30" të Forbes për Europën.
             </p>
             <div className="ceo-signature">
-              <span className="signature">Elena Teodora</span>
+              <span className="signature">Aulona Pirraku</span>
             </div>
             <div className="ceo-social">
               <span>Ndiqni:</span>
-              <a href="#">IG</a>
+              <a href="https://www.instagram.com/thebrand.teo/" target="_blank" rel="noopener noreferrer">
+                IG
+              </a>
               <span>•</span>
-              <a href="#">LI</a>
+            
             </div>
           </div>
         </div>
@@ -179,7 +180,7 @@ const About = () => {
             <span className="studio-eyebrow">Atelieja</span>
             <h2>Ku lind magjia</h2>
             <p>
-              Në zemër të Tiranës, në një ndërtesë historike të viteve '30, 
+              Në zemër të Prishtines, në një ndërtesë historike të viteve '30, 
               ndodhet studioja jonë. Një hapësirë e mbushur me dritë natyrale, 
               pëlhura luksoze dhe energjinë krijuese të ekipit tonë.
             </p>
@@ -188,8 +189,8 @@ const About = () => {
               nga skicat e para deri tek fustani i përfunduar që del nga duart 
               e rrobaqepësve tanë.
             </p>
-            <button className="studio-btn">
-              <span>Vizitoni atelienë</span>
+            <button className="studio-btn" type="button" onClick={() => navigate('/contact')}>
+              <span>Vizitoni Dyqanin</span>
               <span className="btn-arrow">→</span>
             </button>
           </div>
@@ -220,7 +221,7 @@ const About = () => {
         <div className="cta-wrapper fade-in">
           <h2>Bëhuni pjesë e historisë sonë</h2>
           <p>Zbuloni koleksionin më të ri dhe përjetoni elegancën TEO</p>
-          <button className="cta-btn">
+          <button className="cta-btn" type="button" onClick={() => navigate('/products')}>
             <span>Eksploro Koleksionin</span>
             <span className="btn-arrow">→</span>
           </button>

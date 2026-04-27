@@ -1,10 +1,9 @@
-// AdminSidebar.jsx
+// AdminSidebar.jsx - Shto onNavClick
 import React from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
-// Mbetet siç është:
 import { supabase } from '../supabase';
 
-const AdminSidebar = ({ collapsed, setCollapsed, stats, currentAdmin }) => {
+const AdminSidebar = ({ collapsed, setCollapsed, stats, currentAdmin, onNavClick }) => {
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -28,8 +27,13 @@ const AdminSidebar = ({ collapsed, setCollapsed, stats, currentAdmin }) => {
 
   const isActive = (path) => location.pathname === path;
 
+  const handleNavigate = (path) => {
+    navigate(path);
+    if (onNavClick) onNavClick();
+  };
+
   return (
-    <div className={`admin-sidebar ${collapsed ? 'collapsed' : ''}`}>
+    <>
       <div className="sidebar-header">
         <h2>TEO Admin</h2>
         <button className="collapse-btn" onClick={() => setCollapsed(!collapsed)}>
@@ -42,7 +46,7 @@ const AdminSidebar = ({ collapsed, setCollapsed, stats, currentAdmin }) => {
           <button
             key={item.id}
             className={`nav-item ${isActive(item.path) ? 'active' : ''}`}
-            onClick={() => navigate(item.path)}
+            onClick={() => handleNavigate(item.path)}
           >
             <span className="nav-icon">{item.icon}</span>
             <span className="nav-label">{item.label}</span>
@@ -64,7 +68,7 @@ const AdminSidebar = ({ collapsed, setCollapsed, stats, currentAdmin }) => {
           <span className="nav-label">Dilni</span>
         </button>
       </div>
-    </div>
+    </>
   );
 };
 

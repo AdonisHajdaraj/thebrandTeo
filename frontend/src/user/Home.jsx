@@ -67,7 +67,7 @@ const Home = () => {
             <span className="hero-v2-accent">Pa Kohë</span>
           </h1>
           <p className="hero-v2-desc">
-            Çdo fustan është një kryevepër e krijuar me pasion në zemër të Italisë, 
+            Çdo fustan është një kryevepër e krijuar me pasion në zemër të Prishtines, 
             duke sjellë elegancën klasike në gardërobën tuaj.
           </p>
           <div className="hero-v2-buttons">
@@ -87,14 +87,13 @@ const Home = () => {
           <span className="section-tag">Rreth nesh</span>
           <h2>Një histori pasioni dhe elegance</h2>
           <p className="about-brand-text">
-            TEO lindi në vitin 2020 nga vizioni i Elena Teodorës, një dizajnere e diplomuar në 
-            Institutin Marangoni të Milanos. Pas një dekade përvoje në shtëpitë më prestigjioze 
-            të modës në Paris dhe Milano, Elena vendosi të krijojë një markë që kombinon 
-            minimalizmin arkitekturor me sensualitetin e detajeve të punuara me dorë.
+            TEO u themelua në vitin 2023 në Prishtinë nga Aulona Pirraku, pas një karriere 10-vjeçare
+            në modën e lartë në Milano dhe Paris. Marka synon të ndërthurë stilin e
+            personalizuar me mjeshtërinë e punës së dorës.
           </p>
           <p className="about-brand-text">
-            Sot, TEO është një destinacion për gratë që kërkojnë më shumë se një fustan — 
-            kërkojnë një përvojë, një histori, një pjesë të artit të veshshëm.
+            Sot, TEO është një destinacion për gratë që duan më shumë se një fustan —
+            duan një histori të krijuar me materiale premium dhe dizajn të prekur nga eleganca.
           </p>
           <button className="btn-outline-dark" onClick={() => navigate('/about')}>
             Lexo historinë tonë të plotë →
@@ -266,29 +265,25 @@ const Home = () => {
       {/* === INSTAGRAM === */}
       <section className="instagram-mini">
         <div className="section-header">
-          <span className="section-tag">@teo_studio</span>
+          <span className="section-tag">@thebrand.teo</span>
           <h2>Na ndiqni në Instagram</h2>
           <p className="section-subtitle">Për frymëzim të përditshëm dhe pamje ekskluzive</p>
         </div>
         <div className="instagram-mini-grid">
           {[1,2,3,4].map(i => (
-            <div key={i} className="insta-mini-item">
+            <a
+              key={i}
+              className="insta-mini-item"
+              href="https://www.instagram.com/thebrand.teo/"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
               <img src={`https://images.unsplash.com/photo-${i === 1 ? '1539008835657-9e8e9680c956' : i === 2 ? '1595777457583-95e059d581b8' : i === 3 ? '1515372039744-b8f02a3ae446' : '1483985988355-763728e1935b'}?w=300&q=80`} alt="Instagram" />
-            </div>
+            </a>
           ))}
         </div>
       </section>
 
-      {/* === NEWSLETTER === */}
-      <section className="newsletter-v2">
-        <h2>Bëhuni pjesë e familjes TEO</h2>
-        <p>Merrni të parët koleksionet e reja, ofertat ekskluzive dhe ftesat për evente private.</p>
-        <form className="newsletter-v2-form" onSubmit={e => e.preventDefault()}>
-          <input type="email" placeholder="Email-i juaj" required />
-          <button type="submit">Regjistrohu →</button>
-        </form>
-        <p className="newsletter-note">* Nuk ndajmë të dhënat tuaja me askënd. Shiko politikën tonë të privatesisë.</p>
-      </section>
 
       {/* === FOOTER === */}
       <footer className="footer-v2">
@@ -296,8 +291,8 @@ const Home = () => {
           <div className="footer-v2-brand">
             <h2 onClick={handleSecretClick} style={{cursor:'pointer'}}>TEO</h2>
             <p>Elegancë e përjetshme për gruan moderne</p>
-            <p className="footer-address">Rruga Ibrahim Rugova 15, Tiranë</p>
-            <p className="footer-contact">+355 69 123 4567 | hello@teostudio.al</p>
+            <p className="footer-address">Rr. Bedri Shala 9, Prishtinë, Kosovë</p>
+            <p className="footer-contact">+383 44 951 144 | hello@teostudio.al</p>
           </div>
           <div className="footer-v2-links">
             <div className="footer-link-group">
@@ -317,7 +312,7 @@ const Home = () => {
           </div>
         </div>
         <div className="footer-v2-bottom">
-          <p>© 2025 TEO Studio. Të gjitha të drejtat e rezervuara.</p>
+          <p>© 2026 TEO Studio. Të gjitha të drejtat e rezervuara.</p>
         </div>
       </footer>
     </div>

@@ -7,6 +7,8 @@ import Sidebar from './Sidebar';
 import { useCart } from './CartContext';
 
 const CartItemCard = ({ item, onRemove, onDecrement, onIncrement }) => {
+  const orderLabel = item.orderType === 'rent' ? 'Rent' : item.orderType === 'custom' ? 'E personalizuar' : 'Standard';
+
   return (
     <div className="cart-item-card">
       <div className="cart-item-image">
@@ -18,10 +20,10 @@ const CartItemCard = ({ item, onRemove, onDecrement, onIncrement }) => {
           <div>
             <h3>{item.name}</h3>
             <span className={`item-badge ${item.orderType}`}>
-              {item.orderType === 'standard' ? 'Standard' : 'E personalizuar'}
+              {orderLabel}
             </span>
           </div>
-          <button className="remove-btn" onClick={() => onRemove(item.id)}>
+          <button className="remove-btn" onClick={() => onRemove(item.id, item.orderType)}>
             ✕
           </button>
         </div>
@@ -36,11 +38,11 @@ const CartItemCard = ({ item, onRemove, onDecrement, onIncrement }) => {
 
         <div className="item-footer">
           <div className="quantity-control">
-            <button onClick={() => onDecrement(item.id)} disabled={item.quantity <= 1}>
+            <button onClick={() => onDecrement(item.id, item.orderType)} disabled={item.quantity <= 1}>
               −
             </button>
             <span className="quantity">{item.quantity}</span>
-            <button onClick={() => onIncrement(item.id)}>
+            <button onClick={() => onIncrement(item.id, item.orderType)}>
               +
             </button>
           </div>
@@ -76,16 +78,13 @@ const Cart = () => {
     notes: ''
   });
 
-  const updateItemQuantity = (id, newQuantity) => {
+  const updateItemQuantity = (id, orderType, newQuantity) => {
     if (newQuantity < 1) return;
-    updateQuantity(id, cartItems.find(item => item.id === id)?.orderType || 'standard', newQuantity);
+    updateQuantity(id, orderType || cartItems.find(item => item.id === id)?.orderType || 'standard', newQuantity);
   };
 
-  const removeItem = (id) => {
-    const item = cartItems.find(item => item.id === id);
-    if (item) {
-      removeFromCart(id, item.orderType);
-    }
+  const removeItem = (id, orderType) => {
+    removeFromCart(id, orderType || cartItems.find(item => item.id === id)?.orderType || 'standard');
   };
 
   const applyPromoCode = () => {
@@ -177,13 +176,16 @@ const Cart = () => {
         throw orderError;
       }
 
-      // 2. Ruaj artikujt e porosisë
+      // 2. Ruaj artikujt e porosisë ME order_type
       const orderItems = cartItems.map(item => ({
         order_id: orderData.id,
-        product_name: item.name,
+        product_name: item.orderType === 'rent' ? `${item.name} (Rent)` : item.name,
         quantity: item.quantity,
-        price: item.price
+        price: item.price,
+        order_type: item.orderType || 'standard'  // 🔑 FUSHA E RE - Ruan llojin e porosisë
       }));
+
+      console.log('📦 Order items to save:', orderItems); // Debug
 
       const { error: itemsError } = await supabase
         .from('order_items')
@@ -216,6 +218,13 @@ const Cart = () => {
           }
         }
       }
+
+      console.log('✅ Order placed successfully:', {
+        orderId: orderData.id,
+        orderNumber: newOrderNumber,
+        itemsCount: orderItems.length,
+        rentItems: orderItems.filter(i => i.order_type === 'rent').length
+      });
 
       // Pastro shportën dhe shfaq suksesin
       clearCart();

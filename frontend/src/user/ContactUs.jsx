@@ -109,8 +109,8 @@ const Contact = () => {
   const contactInfo = [
     {
       icon: '📍',
-      title: 'Atelieja',
-      lines: ['Rruga Ibrahim Rugova 15', 'Tiranë, Shqipëri']
+      title: 'Adresa',
+      lines: ['Rr. Bedri Shala 9', 'Prishtinë, Kosovë']
     },
     {
       icon: '🕐',
@@ -120,15 +120,15 @@ const Contact = () => {
     {
       icon: '📞',
       title: 'Kontakt i Drejtpërdrejtë',
-      lines: ['+355 69 123 4567', 'hello@teostudio.al']
+      lines: ['+383 44 951 144']
     }
   ];
 
   const socialLinks = [
-    { name: 'Instagram', handle: '@teo_studio', link: '#' },
-    { name: 'Facebook', handle: '/teostudio', link: '#' },
-    { name: 'Pinterest', handle: '@teostudio', link: '#' },
-    { name: 'LinkedIn', handle: '/company/teo-studio', link: '#' }
+    { name: 'Instagram', handle: 'thebrand.teo', link: 'https://www.instagram.com/thebrand.teo/' },
+    { name: 'Facebook', handle: 'teostudio', link: 'https://www.facebook.com/teostudio' },
+    { name: 'Pinterest', handle: '@teostudio', link: 'https://www.pinterest.com/teostudio' },
+    { name: 'LinkedIn', handle: 'teo-studio', link: 'https://www.linkedin.com/company/teo-studio' },
   ];
 
   return (
@@ -186,7 +186,7 @@ const Contact = () => {
               <span className="social-label">Na ndiqni</span>
               <div className="social-links">
                 {socialLinks.map((social, index) => (
-                  <a key={index} href={social.link} className="social-link">
+                  <a key={index} href={social.link} target="_blank" rel="noopener noreferrer" className="social-link">
                     <span className="social-name">{social.name}</span>
                     <span className="social-handle">{social.handle}</span>
                   </a>
@@ -314,21 +314,23 @@ const Contact = () => {
       <section className="contact-map fade-in">
         <div className="map-container">
           <div className="map-placeholder">
+            <iframe
+              title="TEO Studio Location"
+              src="https://maps.google.com/maps?q=Rr.Bedri+Shala+9,+Prishtinë&z=16&output=embed"
+              allowFullScreen
+              loading="lazy"
+            />
             <div className="map-overlay">
               <div className="map-content">
                 <span className="map-icon">📍</span>
-                <h3>Vizitoni atelienë tonë</h3>
-                <p>Rruga Ibrahim Rugova 15, Tiranë</p>
-                <button className="map-btn" onClick={() => window.open('https://maps.google.com/?q=Rruga+Ibrahim+Rugova+15+Tirane', '_blank')}>
+                <h3>Vizitoni dyqanin tonë</h3>
+                <p>Rr. Bedri Shala 9, Prishtinë</p>
+                <button className="map-btn" onClick={() => window.open('https://maps.google.com/?q=Rr.Bedri+Shala+9,+Prishtinë', '_blank')}>
                   <span>Hap në Google Maps</span>
                   <span className="btn-arrow">→</span>
                 </button>
               </div>
             </div>
-            <img 
-              src="https://images.unsplash.com/photo-1524661135-423995f22d0b?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80" 
-              alt="TEO Studio Location" 
-            />
           </div>
         </div>
       </section>
@@ -343,47 +345,25 @@ const Contact = () => {
           <div className="faq-grid">
             <div className="faq-item">
               <h4>Si mund të porosis?</h4>
-              <p>Porositë mund t'i bëni online përmes faqes sonë ose duke na vizituar në atelie.</p>
+              <p>Porositë mund t'i bëni online përmes faqes sonë ose duke na vizituar në dyqan.</p>
             </div>
             <div className="faq-item">
               <h4>Cilat janë opsionet e pagesës?</h4>
-              <p>Pranojmë të gjitha kartat kryesore, PayPal dhe pagesë në dorëzim.</p>
+              <p>Pagesa behet ne dyqan pas marrjes se produkteve.</p>
             </div>
             <div className="faq-item">
-              <h4>Sa zgjat dërgesa?</h4>
-              <p>Dërgesa brenda Shqipërisë zgjat 1-2 ditë pune. Ndërkombëtarisht 3-7 ditë.</p>
+              <h4>A jepni garanci ne produkte?</h4>
+              <p>Po, jepim garanci 24 muaj për të gjitha produkte.</p>
             </div>
             <div className="faq-item">
-              <h4>A keni politikë kthimi?</h4>
-              <p>Po, ofrojmë kthim falas brenda 14 ditëve për të gjitha porositë.</p>
+              <h4>A eshte mundesia qe te merret rent nje fusatan</h4>
+              <p>Po , The Brand Teo ofron fusata  rent në dyqanin tonë.</p>
             </div>
           </div>
         </div>
       </section>
 
-      {/* Newsletter CTA */}
-      <section className="contact-newsletter">
-        <div className="newsletter-wrapper fade-in">
-          <div className="newsletter-content">
-            <h2>Qëndroni të informuar</h2>
-            <p>Regjistrohuni për të marrë lajmet më të fundit rreth koleksioneve dhe eventeve tona.</p>
-            <form className="newsletter-form" onSubmit={(e) => {
-              e.preventDefault();
-              const email = e.target.querySelector('input[type="email"]').value;
-              if (email) {
-                alert('Faleminderit për regjistrimin!');
-                e.target.reset();
-              }
-            }}>
-              <input type="email" placeholder="Adresa juaj email" required />
-              <button type="submit">
-                <span>Regjistrohu</span>
-                <span className="btn-arrow">→</span>
-              </button>
-            </form>
-          </div>
-        </div>
-      </section>
+   
     </div>
   );
 };

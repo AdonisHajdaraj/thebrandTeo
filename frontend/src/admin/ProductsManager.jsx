@@ -16,6 +16,7 @@ const ProductsManager = ({ onRefresh }) => {
     name: '',
     category: 'Mbrëmje',
     price: '',
+    rent_price: '',
     original_price: '',
     stock: '',
     description: '',
@@ -118,6 +119,7 @@ const ProductsManager = ({ onRefresh }) => {
       name: formData.name,
       category: formData.category,
       price: parseFloat(formData.price),
+      rent_price: formData.rent_price ? parseFloat(formData.rent_price) : null,
       original_price: formData.original_price ? parseFloat(formData.original_price) : null,
       stock: parseInt(formData.stock),
       description: formData.description || null,
@@ -161,6 +163,7 @@ const ProductsManager = ({ onRefresh }) => {
       name: product.name,
       category: product.category,
       price: product.price,
+      rent_price: product.rent_price || '',
       original_price: product.original_price || '',
       stock: product.stock,
       description: product.description || '',
@@ -180,6 +183,7 @@ const ProductsManager = ({ onRefresh }) => {
       name: '',
       category: 'Mbrëmje',
       price: '',
+      rent_price: '',
       original_price: '',
       stock: '',
       description: '',
@@ -245,6 +249,11 @@ const ProductsManager = ({ onRefresh }) => {
                     <span className="original">€{product.original_price}</span>
                   )}
                 </div>
+                {product.rent_price && (
+                  <div className="rent-label">
+                    Rent: €{product.rent_price}
+                  </div>
+                )}
                 <div className="actions">
                   <button className="btn-edit" onClick={() => handleEdit(product)}>✏️</button>
                   <button className="btn-delete" onClick={() => handleDelete(product.id)}>🗑️</button>
@@ -297,6 +306,16 @@ const ProductsManager = ({ onRefresh }) => {
                     value={formData.price}
                     onChange={(e) => setFormData({...formData, price: e.target.value})}
                     placeholder="189"
+                  />
+                </div>
+                
+                <div className="form-group">
+                  <label>Çmimi për rent (€)</label>
+                  <input
+                    type="number"
+                    value={formData.rent_price}
+                    onChange={(e) => setFormData({...formData, rent_price: e.target.value})}
+                    placeholder="79"
                   />
                 </div>
                 
