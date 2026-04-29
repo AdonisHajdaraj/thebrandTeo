@@ -1,4 +1,5 @@
-// CustomizeModern.jsx - Me ruajtje në Supabase
+// CustomizeModern.jsx - Me ruajtje në Supabase (Pa çmime dhe pa guidë madhësie)
+
 import React, { useState } from 'react';
 import { supabase } from '../supabase';
 import './style/Customize3D.css';
@@ -27,9 +28,9 @@ const CustomizeModern = () => {
   const [orderNumber, setOrderNumber] = useState('');
 
   const dressTypes = [
-    { id: 'wedding', name: 'Dasme', icon: '💍', description: 'Fustan nuseje i personalizuar', basePrice: 450 },
-    { id: 'evening', name: 'Mbrëmje', icon: '🌙', description: 'Elegant për raste speciale', basePrice: 280 },
-    { id: 'prom', name: 'Prom', icon: '👑', description: 'Për mbrëmjen e maturës', basePrice: 320 }
+    { id: 'wedding', name: 'Dasme', icon: '💍', description: 'Fustan nuseje i personalizuar' },
+    { id: 'evening', name: 'Mbrëmje', icon: '🌙', description: 'Elegant për raste speciale' },
+    { id: 'prom', name: 'Prom', icon: '👑', description: 'Për mbrëmjen e maturës' }
   ];
 
   const colors = [
@@ -52,19 +53,6 @@ const CustomizeModern = () => {
     { number: 4, title: 'Detaje', icon: '✨' },
     { number: 5, title: 'Kontakt', icon: '📞' }
   ];
-
-  // Funksioni për të llogaritur çmimin total
-  const calculatePrice = () => {
-    const selectedType = dressTypes.find(t => t.id === formData.dressType);
-    let basePrice = selectedType ? selectedType.basePrice : 0;
-    
-    let extras = 0;
-    if (formData.hasSlit) extras += 25;
-    if (formData.hasBelt) extras += 30;
-    if (formData.hasLace) extras += 45;
-    
-    return basePrice + extras;
-  };
 
   // Funksioni për të gjeneruar numrin e porosisë
   const generateOrderNumber = () => {
@@ -167,24 +155,21 @@ const CustomizeModern = () => {
       const selectedType = dressTypes.find(t => t.id === formData.dressType);
       const dressTypeName = selectedType ? selectedType.name : formData.dressType;
 
-      // 5. Llogarit çmimin total
-      const totalPrice = calculatePrice();
-
-      // 6. Ruaj në Supabase
+      // 5. Ruaj në Supabase (pa çmim)
       const { error } = await supabase
         .from('custom_orders')
         .insert([
           {
             order_number: newOrderNumber,
-            customer_name: 'Klient', // Mund të shtohet fusha emri në form
+            customer_name: 'Klient',
             customer_email: formData.email,
             customer_phone: formData.phone,
             dress_type: dressTypeName,
             color: formData.color,
             size: formData.size,
-            price: totalPrice,
             status: 'pending',
-            details: detailsString || null
+            details: detailsString || null,
+            contact_method: formData.contactMethod
           }
         ]);
 
@@ -193,7 +178,7 @@ const CustomizeModern = () => {
         throw error;
       }
 
-      // 7. Shfaq suksesin
+      // 6. Shfaq suksesin
       setOrderSubmitted(true);
       
     } catch (error) {
@@ -237,7 +222,7 @@ const CustomizeModern = () => {
               <span>✓</span>
             </div>
             <h2>Porosia u dërgua me sukses!</h2>
-            <p>Ne do t'ju kontaktojmë brenda 24 orëve për të konfirmuar detajet.</p>
+            <p>Ne do t'ju kontaktojmë brenda 24 orëve për të konfirmuar detajet dhe çmimin final.</p>
             
             <div className="order-summary">
               <h3>Përmbledhje e porosisë</h3>
@@ -273,12 +258,12 @@ const CustomizeModern = () => {
                 </strong>
               </div>
               <div className="summary-item">
-                <span>Çmimi total:</span>
-                <strong>€{calculatePrice()}</strong>
+                <span>Çmimi:</span>
+                <strong>Do t'ju konfirmohet pas konsultimit</strong>
               </div>
               <div className="summary-item">
                 <span>Kontakt:</span>
-                <strong>{formData.email}</strong>
+                <strong>{formData.phone} / {formData.email}</strong>
               </div>
             </div>
             
@@ -309,6 +294,7 @@ const CustomizeModern = () => {
           </h1>
           <p className="customize-description">
             Çdo fustan krijohet me dorë sipas specifikimeve tuaja. Na tregoni vizionin tuaj dhe ne do ta sjellim në jetë.
+            Për çmimin, do të kontaktojmë pasi të analizojmë kërkesën tuaj.
           </p>
         </div>
       </section>
@@ -417,7 +403,7 @@ const CustomizeModern = () => {
               </div>
             </div>
 
-            {/* Step 3: Madhësia */}
+            {/* Step 3: Madhësia - PA GUIDË DHE PA ÇMIME */}
             <div className={`form-section ${currentStep === 3 ? 'visible' : ''}`}>
               <div className="section-header">
                 <span className="section-number">03</span>
@@ -436,9 +422,13 @@ const CustomizeModern = () => {
                 ))}
               </div>
               
-              <div className="size-guide">
-                <p>📏 Nuk je e sigurt për madhësinë?</p>
-                <button type="button" className="guide-link">Shiko guidën e madhësive →</button>
+              {/* Njoftimi për çmimin */}
+              <div className="price-notice">
+                <div className="price-notice-icon">💰</div>
+                <div className="price-notice-content">
+                  <strong>Për çmimin do t'ju kontaktojmë në numrin e telefonit</strong>
+                  <p>Çmimi final përcaktohet pasi të analizojmë materialet dhe detajet e kërkesës suaj.</p>
+                </div>
               </div>
               
               <div className="section-actions">
@@ -451,7 +441,7 @@ const CustomizeModern = () => {
               </div>
             </div>
 
-            {/* Step 4: Detaje shtesë dhe përshkrimi */}
+            {/* Step 4: Detaje shtesë dhe përshkrimi - PA ÇMIME */}
             <div className={`form-section ${currentStep === 4 ? 'visible' : ''}`}>
               <div className="section-header">
                 <span className="section-number">04</span>
@@ -468,7 +458,6 @@ const CustomizeModern = () => {
                   <span className="checkbox-custom"></span>
                   <span className="detail-label">
                     <strong>Me çarje</strong>
-                    <small>+€25</small>
                   </span>
                 </label>
                 
@@ -481,7 +470,6 @@ const CustomizeModern = () => {
                   <span className="checkbox-custom"></span>
                   <span className="detail-label">
                     <strong>Me rrip</strong>
-                    <small>+€30</small>
                   </span>
                 </label>
                 
@@ -494,7 +482,6 @@ const CustomizeModern = () => {
                   <span className="checkbox-custom"></span>
                   <span className="detail-label">
                     <strong>Me dantellë</strong>
-                    <small>+€45</small>
                   </span>
                 </label>
               </div>
@@ -559,7 +546,7 @@ const CustomizeModern = () => {
               </div>
             </div>
 
-            {/* Step 5: Kontakt dhe finalizimi */}
+            {/* Step 5: Kontakt dhe finalizimi - PA ÇMIM */}
             <div className={`form-section ${currentStep === 5 ? 'visible' : ''}`}>
               <div className="section-header">
                 <span className="section-number">05</span>
@@ -608,7 +595,7 @@ const CustomizeModern = () => {
                 </div>
               </div>
               
-              {/* Order Summary Card */}
+              {/* Order Summary Card - PA ÇMIM */}
               <div className="order-summary-card">
                 <h3>Përmbledhje e porosisë</h3>
                 <div className="summary-rows">
@@ -637,9 +624,9 @@ const CustomizeModern = () => {
                       ].filter(Boolean).join(', ') || 'Asnjë'}
                     </span>
                   </div>
-                  <div className="summary-row">
-                    <span>Çmimi total:</span>
-                    <span><strong>€{calculatePrice()}</strong></span>
+                  <div className="summary-row price-row-notice">
+                    <span>Çmimi:</span>
+                    <span><strong>Do të konfirmohet</strong></span>
                   </div>
                   {formData.dateNeeded && (
                     <div className="summary-row">
@@ -659,7 +646,7 @@ const CustomizeModern = () => {
                     <span>Duke u dërguar...</span>
                   ) : (
                     <>
-                      <span>Finalizo porosinë</span>
+                      <span>Dërgo kërkesën</span>
                       <span className="btn-arrow">→</span>
                     </>
                   )}
@@ -667,7 +654,8 @@ const CustomizeModern = () => {
               </div>
               
               <p className="form-note">
-                * Afati i prodhimit: 3-4 javë. Transporti falas në të gjithë Shqipërinë.
+                * Pas dërgimit të kërkesës, ne do t'ju kontaktojmë për të diskutuar detajet dhe çmimin final.
+                Afati i prodhimit: 3-4 javë. Transporti falas në të gjithë Shqipërinë.
               </p>
             </div>
           </form>

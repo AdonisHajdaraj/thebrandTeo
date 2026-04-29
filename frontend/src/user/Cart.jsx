@@ -1,4 +1,5 @@
-// Cart.jsx - Me pagesë vetëm kesh dhe ruajtje në Supabase
+// Cart.jsx - Pa zbritje dhe pa transport, vetëm porosit dhe kontakto për çmim
+
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { supabase } from '../supabase';
@@ -61,9 +62,6 @@ const CartItemCard = ({ item, onRemove, onDecrement, onIncrement }) => {
 
 const Cart = () => {
   const { cartItems, removeFromCart, updateQuantity, clearCart } = useCart();
-  const [promoCode, setPromoCode] = useState('');
-  const [promoApplied, setPromoApplied] = useState(false);
-  const [discount, setDiscount] = useState(0);
   const [showCheckoutModal, setShowCheckoutModal] = useState(false);
   const [orderPlaced, setOrderPlaced] = useState(false);
   const [orderNumber, setOrderNumber] = useState('');
@@ -87,38 +85,8 @@ const Cart = () => {
     removeFromCart(id, orderType || cartItems.find(item => item.id === id)?.orderType || 'standard');
   };
 
-  const applyPromoCode = () => {
-    if (promoCode.toUpperCase() === 'TEO20') {
-      setDiscount(0.2);
-      setPromoApplied(true);
-    } else if (promoCode.toUpperCase() === 'WELCOME10') {
-      setDiscount(0.1);
-      setPromoApplied(true);
-    } else {
-      alert('Kodi i zbritjes nuk është i vlefshëm.');
-    }
-  };
-
-  const removePromo = () => {
-    setDiscount(0);
-    setPromoApplied(false);
-    setPromoCode('');
-  };
-
   const calculateSubtotal = () => {
     return cartItems.reduce((total, item) => total + (item.price * item.quantity), 0);
-  };
-
-  const calculateDiscountAmount = () => {
-    return calculateSubtotal() * discount;
-  };
-
-  const calculateShipping = () => {
-    return calculateSubtotal() > 300 ? 0 : 15;
-  };
-
-  const calculateTotal = () => {
-    return calculateSubtotal() - calculateDiscountAmount() + calculateShipping();
   };
 
   // Gjenero numrin e porosisë
@@ -147,11 +115,8 @@ const Cart = () => {
       const newOrderNumber = generateOrderNumber();
       setOrderNumber(newOrderNumber);
 
-      // Përgatit totalin
-      const subtotal = calculateSubtotal();
-      const discountAmount = calculateDiscountAmount();
-      const shipping = calculateShipping();
-      const total = calculateTotal();
+      // Përgatit totalin (pa transport)
+      const total = calculateSubtotal();
 
       // 1. Ruaj porosinë në tabelën orders
       const { data: orderData, error: orderError } = await supabase
@@ -176,16 +141,16 @@ const Cart = () => {
         throw orderError;
       }
 
-      // 2. Ruaj artikujt e porosisë ME order_type
+      // 2. Ruaj artikujt e porosisë me order_type
       const orderItems = cartItems.map(item => ({
         order_id: orderData.id,
         product_name: item.orderType === 'rent' ? `${item.name} (Rent)` : item.name,
         quantity: item.quantity,
         price: item.price,
-        order_type: item.orderType || 'standard'  // 🔑 FUSHA E RE - Ruan llojin e porosisë
+        order_type: item.orderType || 'standard'
       }));
 
-      console.log('📦 Order items to save:', orderItems); // Debug
+      console.log('📦 Order items to save:', orderItems);
 
       const { error: itemsError } = await supabase
         .from('order_items')
@@ -196,9 +161,9 @@ const Cart = () => {
         throw itemsError;
       }
 
-      // 3. Përditëso stokun e produkteve (zvogëlo sasinë)
+      // 3. Përditëso stokun e produkteve (zvogëlo sasinë) - vetëm për produkte jo rent
       for (const item of cartItems) {
-        if (item.id) {
+        if (item.id && item.orderType !== 'rent') {
           // Merr produktin aktual
           const { data: product } = await supabase
             .from('products')
@@ -248,15 +213,15 @@ const Cart = () => {
             <div className="success-icon">
               <span>✓</span>
             </div>
-            <h2>Porosia u konfirmua!</h2>
+            <h2>Porosia u dërgua!</h2>
             <p className="success-message">
-              Faleminderit për porosinë tuaj! Ne do t'ju kontaktojmë në numrin e telefonit ose emailin që keni dhënë për të konfirmuar detajet e pagesës dhe dërgesës.
+              Faleminderit për porosinë tuaj! Ne do t'ju kontaktojmë në numrin e telefonit ose emailin që keni dhënë për të konfirmuar detajet dhe për të diskutuar çmimin final.
             </p>
             
-            <div className="payment-info-card">
-              <div className="payment-icon">💶</div>
-              <h3>Pagesa me Kesh</h3>
-              <p>Pagesa do të kryhet pasi t'ju kontaktojmë për konfirmimin e porosisë.</p>
+            <div className="price-notice-card">
+              <div className="price-notice-icon">💰</div>
+              <h3>Për çmimin do t'ju kontaktojmë</h3>
+              <p>Çmimi final do të konfirmohet pasi të shqyrtojmë porosinë tuaj. Ne do t'ju kontaktojmë për të rënë dakord për detajet e pagesës dhe dërgesës.</p>
             </div>
 
             <div className="contact-info-card">
@@ -270,7 +235,7 @@ const Cart = () => {
             </div>
             
             <div className="order-details">
-              <h3>Detajet e porosisë</h3>
+              <h3>Përmbledhje e porosisë</h3>
               <div className="order-number">
                 <span>Numri i porosisë:</span>
                 <strong>{orderNumber}</strong>
@@ -284,8 +249,11 @@ const Cart = () => {
                 ))}
               </div>
               <div className="order-total">
-                <span>Totali për t'u paguar:</span>
-                <strong>€{calculateTotal()}</strong>
+                <span>Totali i përkohshëm:</span>
+                <strong>€{calculateSubtotal()}</strong>
+              </div>
+              <div className="price-confirm-note">
+                <small>* Çmimi final do të konfirmohet pas kontaktit</small>
               </div>
             </div>
             
@@ -352,8 +320,8 @@ const Cart = () => {
                       key={item.id}
                       item={item}
                       onRemove={removeItem}
-                      onDecrement={(id) => updateItemQuantity(id, item.quantity - 1)}
-                      onIncrement={(id) => updateItemQuantity(id, item.quantity + 1)}
+                      onDecrement={(id) => updateItemQuantity(id, item.orderType, item.quantity - 1)}
+                      onIncrement={(id) => updateItemQuantity(id, item.orderType, item.quantity + 1)}
                     />
                   ))}
                 </div>
@@ -366,76 +334,32 @@ const Cart = () => {
                   
                   <div className="summary-rows">
                     <div className="summary-row">
-                      <span>Nëntotali</span>
+                      <span>Totali i artikujve</span>
                       <span>€{calculateSubtotal().toFixed(2)}</span>
-                    </div>
-                    
-                    {promoApplied && (
-                      <div className="summary-row discount-row">
-                        <div>
-                          <span>Zbritja ({discount * 100}%)</span>
-                          <button onClick={removePromo} className="remove-promo">✕</button>
-                        </div>
-                        <span className="discount-amount">-€{calculateDiscountAmount().toFixed(2)}</span>
-                      </div>
-                    )}
-                    
-                    <div className="summary-row">
-                      <span>Transporti</span>
-                      {calculateShipping() === 0 ? (
-                        <span className="free-shipping">Falas</span>
-                      ) : (
-                        <span>€{calculateShipping().toFixed(2)}</span>
-                      )}
                     </div>
                     
                     <div className="summary-divider"></div>
                     
                     <div className="summary-row total-row">
-                      <span>Totali</span>
-                      <span className="total-amount">€{calculateTotal().toFixed(2)}</span>
+                      <span>Totali i përkohshëm</span>
+                      <span className="total-amount">€{calculateSubtotal().toFixed(2)}</span>
                     </div>
                   </div>
                   
-                  {/* Promo Code */}
-                  {!promoApplied ? (
-                    <div className="promo-section">
-                      <label>Kodi i zbritjes</label>
-                      <div className="promo-input">
-                        <input
-                          type="text"
-                          placeholder="Shkruaj kodin"
-                          value={promoCode}
-                          onChange={(e) => setPromoCode(e.target.value)}
-                        />
-                        <button onClick={applyPromoCode}>Apliko</button>
-                      </div>
-                      <p className="promo-hint">Provoni TEO20 ose WELCOME10</p>
+                  {/* Price Notice - Për çmimin do kontaktojmë */}
+                  <div className="price-notice-box">
+                    <div className="price-notice-icon">💬</div>
+                    <div className="price-notice-text">
+                      <strong>Për çmimin final do t'ju kontaktojmë</strong>
+                      <p>Çmimi mund të ndryshojë në varësi të porosisë. Ne do t'ju konfirmojmë çmimin përfundimtar pasi të shqyrtojmë kërkesën tuaj.</p>
                     </div>
-                  ) : (
-                    <div className="promo-applied">
-                      <span>✓ Kodi u aplikua ({discount * 100}% zbritje)</span>
-                    </div>
-                  )}
-                  
-                  {/* Free Shipping Message */}
-                  {calculateSubtotal() < 300 && (
-                    <div className="shipping-message">
-                      <span>Shtoni edhe €{(300 - calculateSubtotal()).toFixed(0)} për transport falas</span>
-                      <div className="progress-bar">
-                        <div 
-                          className="progress-fill" 
-                          style={{ width: `${Math.min((calculateSubtotal() / 300) * 100, 100)}%` }}
-                        ></div>
-                      </div>
-                    </div>
-                  )}
+                  </div>
                   
                   <button 
                     className="checkout-btn"
                     onClick={() => setShowCheckoutModal(true)}
                   >
-                    <span>Vazhdo te pagesa</span>
+                    <span>Porosit tani</span>
                     <span className="btn-arrow">→</span>
                   </button>
                   
@@ -444,14 +368,14 @@ const Cart = () => {
                   </Link>
                 </div>
                 
-                {/* Payment Methods - Vetëm Kesh */}
+                {/* Payment Methods - Pa transport, pa zbritje */}
                 <div className="payment-methods">
                   <span>Mënyra e pagesës</span>
                   <div className="payment-icons">
-                    <span className="cash-payment">💶 Kesh</span>
+                    <span className="cash-payment">💶 Do të konfirmohet</span>
                   </div>
                   <p className="payment-note">
-                    Pagesa kryhet pas konfirmimit të porosisë nga stafi ynë.
+                    Mënyra e pagesës, transporti dhe çmimi final do të konfirmohen pasi t'ju kontaktojmë.
                   </p>
                 </div>
               </div>
@@ -498,8 +422,8 @@ const Cart = () => {
             <button className="modal-close" onClick={() => setShowCheckoutModal(false)}>✕</button>
             
             <div className="modal-header">
-              <h2>Finalizo porosinë</h2>
-              <p>Plotësoni të dhënat e kontaktit për konfirmim</p>
+              <h2>Porosit tani</h2>
+              <p>Plotësoni të dhënat tuaja për të dërguar porosinë</p>
             </div>
             
             <form className="checkout-form" onSubmit={handleCheckout}>
@@ -580,20 +504,21 @@ const Cart = () => {
                 />
               </div>
               
-              <div className="payment-method-info">
-                <div className="payment-method-header">
-                  <span className="payment-icon">💶</span>
-                  <span className="payment-method-name">Pagesë me Kesh</span>
+              <div className="price-info-modal">
+                <div className="price-info-icon">💰</div>
+                <div className="price-info-content">
+                  <strong>Për çmimin do t'ju kontaktojmë</strong>
+                  <p>Çmimi final do të konfirmohet pasi të shqyrtojmë porosinë tuaj. Ne do t'ju kontaktojmë për të rënë dakord për detajet e pagesës dhe transportit.</p>
                 </div>
-                <p className="payment-method-description">
-                  Do t'ju kontaktojmë në numrin e telefonit ose emailin tuaj për të konfirmuar porosinë dhe për të rënë dakord për mënyrën e pagesës dhe dërgesës.
-                </p>
               </div>
               
               <div className="order-summary-mini">
                 <div className="summary-row">
-                  <span>Totali për t'u paguar:</span>
-                  <strong>€{calculateTotal().toFixed(2)}</strong>
+                  <span>Totali i artikujve:</span>
+                  <strong>€{calculateSubtotal().toFixed(2)}</strong>
+                </div>
+                <div className="price-confirm-small">
+                  <small>* Transporti dhe çmimi final do të konfirmohen pas kontaktit</small>
                 </div>
               </div>
               
@@ -606,7 +531,7 @@ const Cart = () => {
                     <span>Duke u përpunuar...</span>
                   ) : (
                     <>
-                      <span>Konfirmo porosinë</span>
+                      <span>Dërgo porosinë</span>
                       <span className="btn-arrow">→</span>
                     </>
                   )}
